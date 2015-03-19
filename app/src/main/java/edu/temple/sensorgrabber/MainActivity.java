@@ -11,6 +11,9 @@ import android.view.View;
 
 public class MainActivity extends ActionBarActivity {
 
+    //For some reason our activitydata class is causing problems in the service. I am going to attempt to debug it here.
+    private ActivityData nachos = new ActivityData();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
             case R.id.buttonStart:
                 Log.v("MainActivity:","Start Service Button Hit");
                 startService(intent);
+                //nachos.addXYZData(12345l, 0f, 1f, 2f, "nachos");
                 break;
 
             case R.id.buttonStop:
