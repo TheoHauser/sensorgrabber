@@ -23,6 +23,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float[] mAccelerometerValues = null;
     float[] mMagneticValues = null;
     float orientation[] = new float[3];
+    long currentTime = System.currentTimeMillis();
 
 
     boolean bothSensorsHaveValues = false;
@@ -44,6 +45,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
 
     private void sendBroadcast(){
         Intent intent = new Intent ("orientationValues"); //put the same message as in the filter you used in the activity when registering the receiver
+        intent.putExtra("time", String.valueOf(currentTime));
         intent.putExtra("azimuth", String.valueOf(orientation[0]));
         intent.putExtra("pitch", String.valueOf(orientation[1]));
         intent.putExtra("roll", String.valueOf(orientation[2]));
@@ -78,6 +80,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             //If we are indeed successful then we will use that info to grab our orientation.
             if(success){
                 SensorManager.getOrientation(R,orientation);
+                currentTime= System.currentTimeMillis();
             }
 
             //We have our values, now we should prep the intent that will send them back.

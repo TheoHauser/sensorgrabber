@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -33,24 +37,39 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             //put here whatever you want your activity to do with the intent received
             Bundle args = intent.getExtras();
+            String time = args.getString("time");
             String azimuth = args.getString("azimuth");
             String pitch = args.getString("pitch");
             String roll = args.getString("roll");
 
             Log.v("Sensor Values:", azimuth + "," + pitch + "," + roll);
-            setTextValues(azimuth,pitch,roll);
+            setTextValues(time, azimuth,pitch,roll);
 //            Toast toast = new Toast(context);
 //            toast.setDuration(Toast.LENGTH_LONG);
 //            toast.setText("Sensor Values:" + azimuth + "," + pitch + "," + roll);
         }
     };
 
+    private BroadcastReceiver FileBReceiver = new BroadcastReceiver(){
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //put here whatever you want your activity to do with the intent received
+            Bundle args = intent.getExtras();
+            String fileName = args.getString("filename");
+
+            sendFileViaEmail(fileName);
+
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.v("MainActivity:","Started");
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("orientationValues"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(FileBReceiver, new IntentFilter("fileDone"));
 
     }
 
@@ -85,7 +104,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void onClick(View view){
 
-        Intent intent = new Intent( getApplicationContext(), InfoSensorService.class);
+        Intent intent = new Intent( getApplicationContext(), DataStorageService.class);
 
         switch(view.getId()){
             case R.id.buttonStart:
@@ -93,12 +112,17 @@ public class MainActivity extends ActionBarActivity {
                 //startService(intent);
                 //nachos.addXYZData(12345l, 0f, 1f, 2f, "nachos");
                 startAutoCheckOfSensors();
+
+                //Start the DataStorageService which is meant to listen to broadcasts and store them.
+                startService(intent);
                 break;
 
             case R.id.buttonStop:
                 Log.v("MainActivity:","Stop Service Button Hit");
-                //stopService(intent);
                 stopAutoCheckOfSensors();
+
+                //Stop the DataStorageService which should hopefully write to a file.
+                stopService(intent);
                 break;
 
 
@@ -117,15 +141,34 @@ public class MainActivity extends ActionBarActivity {
         scheduler.cancel(scheduledIntent);
     }
 
-    void setTextValues(String azimuth, String pitch, String roll){
+    void setTextValues(String time, String azimuth, String pitch, String roll){
+        TextView timeTextView = (TextView) findViewById(R.id.textTime);
         TextView azimuthTextView = (TextView) findViewById(R.id.textAzimuth);
         TextView pitchTextView = (TextView) findViewById(R.id.textPitch);
         TextView rollTextView = (TextView) findViewById(R.id.textRoll);
 
+        timeTextView.setText(time);
         azimuthTextView.setText(azimuth);
         pitchTextView.setText(pitch);
         rollTextView.setText(roll);
 
 
+    }
+
+    void sendFileViaEmail(String filename){
+        //Get all files?
+        File[] files = getFilesDir().listFiles();
+        //FileOutputStream fOut = openFileOutput(filename, Context.MODE);
+        File file = new File(getFilesDir()+"/"+filename);
+
+        Uri U = Uri.fromFile(file);
+        Intent i = new Intent(Intent.ACTION_SEND);
+        //Intent i = Intent.createChooser(i, "Send Mail");
+        i.setType("application/csv");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Captured Data");
+        //i.putExtra(Intent.EXTRA_TEXT, "This is captured data.");
+        i.putExtra(Intent.EXTRA_STREAM, U);
+        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(i, "Send Mail"));
     }
 }

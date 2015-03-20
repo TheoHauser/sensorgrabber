@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <service android:name=".InfoSensorService"/>
+        <service android:name=".DataStorageService"/>
 
 
     </application>

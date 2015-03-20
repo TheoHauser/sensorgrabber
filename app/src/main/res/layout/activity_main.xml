@@ -35,11 +35,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Azimuth"
-        android:id="@+id/textAzimuth"
+        android:text="Time"
+        android:id="@+id/textTime"
         android:layout_below="@+id/textTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="75dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Azimuth"
+        android:id="@+id/textAzimuth"
+        android:layout_below="@+id/textTime"
+        android:layout_centerHorizontal="true"
+         />
 
     <TextView
         android:layout_width="wrap_content"
