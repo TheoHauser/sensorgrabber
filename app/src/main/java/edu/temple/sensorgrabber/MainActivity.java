@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -156,10 +157,16 @@ public class MainActivity extends ActionBarActivity {
     }
 
     void sendFileViaEmail(String filename){
+
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
+        File file = new File(directory, filename);
+
+
         //Get all files?
         File[] files = getFilesDir().listFiles();
         //FileOutputStream fOut = openFileOutput(filename, Context.MODE);
-        File file = new File(getFilesDir()+"/"+filename);
+        //File file = new File(getFilesDir()+"/"+filename);
 
         Uri U = Uri.fromFile(file);
         Intent i = new Intent(Intent.ACTION_SEND);

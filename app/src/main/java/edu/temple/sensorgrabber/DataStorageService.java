@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
@@ -65,7 +67,13 @@ public class DataStorageService extends Service {
     void writeToFile(){
         //Create the output file to write to.
         try{
-            FileOutputStream fOut = openFileOutput(fileName, Context.MODE_APPEND);
+            //FileOutputStream fOut = openFileOutput(fileName, Context.MODE_APPEND);
+            //Commented out the above in an attempt to write somewhere public so i can send the email.
+            File sdCard = Environment.getExternalStorageDirectory();
+            File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
+            directory.mkdirs();
+            File file = new File(directory, fileName);
+            FileOutputStream fOut = new FileOutputStream(file, true);
             PrintWriter pWriter = new PrintWriter(fOut);
 
 
@@ -74,13 +82,14 @@ public class DataStorageService extends Service {
             int sizeOfStoredData = storedActivityData.returnSize();
             String currentLineToWrite;
 
-            for(int i = 0; i <= sizeOfStoredData; i++){
+            for(int i = 0; i < sizeOfStoredData; i++){
                 currentLineToWrite = storedActivityData.pullXYZData(i);
                 pWriter.printf("%s\n", currentLineToWrite);
 
             }
 
             pWriter.close();
+            Log.v("something","osmething");
 
 
 
