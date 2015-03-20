@@ -32,4 +32,29 @@
         android:layout_marginTop="47dp"
         android:onClick="onClick"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Azimuth"
+        android:id="@+id/textAzimuth"
+        android:layout_below="@+id/textTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roll"
+        android:id="@+id/textRoll"
+        android:layout_below="@+id/textAzimuth"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pitch"
+        android:id="@+id/textPitch"
+        android:layout_below="@+id/textRoll"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

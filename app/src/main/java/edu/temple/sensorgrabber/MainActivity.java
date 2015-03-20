@@ -1,9 +1,12 @@
 package edu.temple.sensorgrabber;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -18,6 +22,10 @@ public class MainActivity extends ActionBarActivity {
 
     //For some reason our activitydata class is causing problems in the service. I am going to attempt to debug it here.
     private ActivityData nachos = new ActivityData();
+
+    AlarmManager scheduler;
+    Intent intentSchedule;
+    PendingIntent scheduledIntent;
 
     private BroadcastReceiver BReceiver = new BroadcastReceiver(){
 
@@ -29,8 +37,8 @@ public class MainActivity extends ActionBarActivity {
             String pitch = args.getString("pitch");
             String roll = args.getString("roll");
 
-            Log.d("Sensor Values:", azimuth + "," + pitch + "," + roll);
-
+            Log.v("Sensor Values:", azimuth + "," + pitch + "," + roll);
+            setTextValues(azimuth,pitch,roll);
 //            Toast toast = new Toast(context);
 //            toast.setDuration(Toast.LENGTH_LONG);
 //            toast.setText("Sensor Values:" + azimuth + "," + pitch + "," + roll);
@@ -82,17 +90,42 @@ public class MainActivity extends ActionBarActivity {
         switch(view.getId()){
             case R.id.buttonStart:
                 Log.v("MainActivity:","Start Service Button Hit");
-                startService(intent);
+                //startService(intent);
                 //nachos.addXYZData(12345l, 0f, 1f, 2f, "nachos");
+                startAutoCheckOfSensors();
                 break;
 
             case R.id.buttonStop:
                 Log.v("MainActivity:","Stop Service Button Hit");
-                stopService(intent);
+                //stopService(intent);
+                stopAutoCheckOfSensors();
                 break;
 
 
         }
     }
 
+    void startAutoCheckOfSensors(){
+        scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        intentSchedule = new Intent(getApplicationContext(), InfoSensorService.class );
+        //PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intentSchedule, 0);
+        scheduler.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), 6*1000, scheduledIntent );
+    }
+
+    void stopAutoCheckOfSensors(){
+        scheduler.cancel(scheduledIntent);
+    }
+
+    void setTextValues(String azimuth, String pitch, String roll){
+        TextView azimuthTextView = (TextView) findViewById(R.id.textAzimuth);
+        TextView pitchTextView = (TextView) findViewById(R.id.textPitch);
+        TextView rollTextView = (TextView) findViewById(R.id.textRoll);
+
+        azimuthTextView.setText(azimuth);
+        pitchTextView.setText(pitch);
+        rollTextView.setText(roll);
+
+
+    }
 }
