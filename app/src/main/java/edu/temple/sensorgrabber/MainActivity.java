@@ -32,6 +32,9 @@ public class MainActivity extends ActionBarActivity {
     Intent intentSchedule;
     PendingIntent scheduledIntent;
 
+    //Set how many MS between each attempted update.
+    final int repeatMS = 1000;
+
     private BroadcastReceiver BReceiver = new BroadcastReceiver(){
 
         @Override
@@ -135,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
         intentSchedule = new Intent(getApplicationContext(), InfoSensorService.class );
         //PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intentSchedule, 0);
-        scheduler.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), 6*1000, scheduledIntent );
+        scheduler.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), repeatMS, scheduledIntent );
     }
 
     void stopAutoCheckOfSensors(){
