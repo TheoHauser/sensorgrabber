@@ -49,6 +49,12 @@ public class InfoSensorService extends Service implements SensorEventListener {
         intent.putExtra("azimuth", String.valueOf(orientation[0]));
         intent.putExtra("pitch", String.valueOf(orientation[1]));
         intent.putExtra("roll", String.valueOf(orientation[2]));
+        //adding extra stuff for the accelerometer values.
+        intent.putExtra("xAccel", String.valueOf(mAccelerometerValues[0]));
+        intent.putExtra("yAccel", String.valueOf(mAccelerometerValues[1]));
+        intent.putExtra("zAccel", String.valueOf(mAccelerometerValues[2]));
+
+
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

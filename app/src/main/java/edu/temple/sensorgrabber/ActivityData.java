@@ -36,7 +36,7 @@ public class ActivityData {
     public void addAngleAccelData(long timeData, float xAngle, float yAngle, float zAngle, float xAccel, float yAccel, float zAccel, String name){
 
         String tempString = null;
-        tempString  = Long.toString(timeData) +
+        tempString  = Long.toString(timeData) + "," +
                 Float.toString(xAngle) + "," +
                 Float.toString(yAngle) + "," +
                 Float.toString(zAngle) + "," +

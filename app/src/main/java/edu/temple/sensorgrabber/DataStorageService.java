@@ -115,9 +115,18 @@ public class DataStorageService extends Service {
             String pitch = args.getString("pitch");
             String roll = args.getString("roll");
 
-            //Temporary storage.
-            storedActivityData.addXYZData(Long.valueOf(time), Float.valueOf(azimuth), Float.valueOf(pitch), Float.valueOf(roll), nameOfCapture);
+            //I have added some more data.
+            String xAccel = args.getString("xAccel");
+            String yAccel = args.getString("yAccel");
+            String zAccel = args.getString("zAccel");
 
+
+            //Temporary storage.
+            //storedActivityData.addXYZData(Long.valueOf(time), Float.valueOf(azimuth), Float.valueOf(pitch), Float.valueOf(roll), nameOfCapture);
+
+            //Now that I am logging more information I am going to use the addAngleAccelData() method instead of the addXYZData() method.
+            storedActivityData.addAngleAccelData(Long.valueOf(time), Float.valueOf(azimuth), Float.valueOf(pitch), Float.valueOf(roll),
+                    Float.valueOf(xAccel),Float.valueOf(yAccel),Float.valueOf(zAccel),nameOfCapture);
             }
 
         };
