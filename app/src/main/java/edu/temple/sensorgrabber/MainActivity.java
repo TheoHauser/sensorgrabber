@@ -1,5 +1,6 @@
 package edu.temple.sensorgrabber;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,8 +27,6 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends ActionBarActivity {
 
-    //For some reason our activitydata class is causing problems in the service. I am going to attempt to debug it here.
-    private ActivityData nachos = new ActivityData();
 
     AlarmManager scheduler;
     Intent intentSchedule;
@@ -48,9 +48,6 @@ public class MainActivity extends ActionBarActivity {
 
             Log.v("Sensor Values:", azimuth + "," + pitch + "," + roll);
             setTextValues(time, azimuth,pitch,roll);
-//            Toast toast = new Toast(context);
-//            toast.setDuration(Toast.LENGTH_LONG);
-//            toast.setText("Sensor Values:" + azimuth + "," + pitch + "," + roll);
         }
     };
 
@@ -111,23 +108,46 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent( getApplicationContext(), DataStorageService.class);
 
         switch(view.getId()){
-            case R.id.buttonStart:
-                Log.v("MainActivity:","Start Service Button Hit");
-                //startService(intent);
-                //nachos.addXYZData(12345l, 0f, 1f, 2f, "nachos");
-                startAutoCheckOfSensors();
+//            case R.id.buttonStart:
+//                Log.v("MainActivity:","Start Service Button Hit");
+//                //startService(intent);
+//                //nachos.addXYZData(12345l, 0f, 1f, 2f, "nachos");
+//                startAutoCheckOfSensors();
+//
+//                //Start the DataStorageService which is meant to listen to broadcasts and store them.
+//                startService(intent);
+//
+//                //Check to see if the service is running. If so let the user know.
+//                //if (isMyServiceRunning(DataStorageService.class)) {
+//                    //Let the user know.
+//
+//                //}
+//
+//                break;
+//
+//            case R.id.buttonStop:
+//                Log.v("MainActivity:","Stop Service Button Hit");
+//                stopAutoCheckOfSensors();
+//
+//                //Stop the DataStorageService which should hopefully write to a file.
+//                stopService(intent);
+//                break;
 
-                //Start the DataStorageService which is meant to listen to broadcasts and store them.
-                startService(intent);
-                break;
+            case R.id.toggleButtonRecord:
+                boolean on = ((ToggleButton) view).isChecked();
 
-            case R.id.buttonStop:
-                Log.v("MainActivity:","Stop Service Button Hit");
-                stopAutoCheckOfSensors();
+                if (on) {
+                    startAutoCheckOfSensors();
+                    startService(intent);
+                    ((ToggleButton) view).setText("Currently Recording");
 
-                //Stop the DataStorageService which should hopefully write to a file.
-                stopService(intent);
-                break;
+
+                } else {
+                    stopService(intent);
+                    ((ToggleButton) view).setText("Press To Record");
+                }
+
+
 
 
         }
@@ -180,5 +200,15 @@ public class MainActivity extends ActionBarActivity {
         i.putExtra(Intent.EXTRA_STREAM, U);
         //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(i, "Send Mail"));
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

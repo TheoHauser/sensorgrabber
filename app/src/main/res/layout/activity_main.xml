@@ -12,26 +12,6 @@
         android:elegantTextHeight="false"
         android:textSize="@dimen/abc_text_size_title_material" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Record"
-        android:id="@+id/buttonStart"
-        android:layout_marginBottom="127dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClick"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop"
-        android:id="@+id/buttonStop"
-        android:layout_alignTop="@+id/buttonStart"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp"
-        android:onClick="onClick"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,5 +45,17 @@
         android:id="@+id/textPitch"
         android:layout_below="@+id/textRoll"
         android:layout_centerHorizontal="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Press To Record"
+        android:id="@+id/toggleButtonRecord"
+        android:checked="false"
+        android:onClick ="onClick"
+        android:layout_below="@+id/textPitch"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="134dp"
+        android:textOff="Press To Record" />
 
 </RelativeLayout>
