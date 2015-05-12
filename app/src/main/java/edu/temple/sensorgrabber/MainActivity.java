@@ -139,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
                 if (on) {
                     startAutoCheckOfSensors();
                     startService(intent);
-                    ((ToggleButton) view).setText("Currently Recording");
+                    ((ToggleButton) view).setText("Stop Recording");
 
 
                 } else {
