@@ -57,9 +57,9 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             //put here whatever you want your activity to do with the intent received
             Bundle args = intent.getExtras();
-            String fileName = args.getString("filename");
+            //String fileName = args.getString("filename");
 
-            sendFileViaEmail(fileName);
+            //sendFileViaEmail(fileName);
 
 
         }
@@ -191,15 +191,15 @@ public class MainActivity extends ActionBarActivity {
         //FileOutputStream fOut = openFileOutput(filename, Context.MODE);
         //File file = new File(getFilesDir()+"/"+filename);
 
-        Uri U = Uri.fromFile(file);
-        Intent i = new Intent(Intent.ACTION_SEND);
+        //Uri U = Uri.fromFile(file);
+        //Intent i = new Intent(Intent.ACTION_SEND);
         //Intent i = Intent.createChooser(i, "Send Mail");
-        i.setType("application/csv");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Captured Data");
+        //i.setType("application/csv");
+        //i.putExtra(Intent.EXTRA_SUBJECT, "Captured Data");
         //i.putExtra(Intent.EXTRA_TEXT, "This is captured data.");
-        i.putExtra(Intent.EXTRA_STREAM, U);
+        //i.putExtra(Intent.EXTRA_STREAM, U);
         //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(Intent.createChooser(i, "Send Mail"));
+        //startActivity(Intent.createChooser(i, "Send Mail"));
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
