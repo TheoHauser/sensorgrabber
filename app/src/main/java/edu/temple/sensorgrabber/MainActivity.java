@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
             Bundle args = intent.getExtras();
             String fileName = args.getString("filename");
 
-            sendFileViaEmail(fileName);
+            //sendFileViaEmail(fileName);
 
 
         }
