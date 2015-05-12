@@ -31,7 +31,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     SimpleDateFormat dateTime = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss:SSS");
     Calendar calTime = Calendar.getInstance();
 
-    public static String currentTime;
+    String currentTime;
 
 
     boolean bothSensorsHaveValues = false;
