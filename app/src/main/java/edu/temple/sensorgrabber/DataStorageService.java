@@ -14,6 +14,8 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by vmartin on 3/20/15.
@@ -22,7 +24,12 @@ public class DataStorageService extends Service {
     //Where we are going to store the stuff we need.
     ActivityData storedActivityData = new ActivityData();
     String nameOfCapture = "Test";
-    String fileName = Long.valueOf(System.currentTimeMillis()) + ".csv";
+
+    //tried changing the name of the data file
+    SimpleDateFormat dt = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    Calendar c = Calendar.getInstance();
+    String d = dt.format(c);
+    String fileName = "sensorData:" + d + ".csv";
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -76,7 +83,10 @@ public class DataStorageService extends Service {
             FileOutputStream fOut = new FileOutputStream(file, true);
             PrintWriter pWriter = new PrintWriter(fOut);
 
-
+            File sensorData = new File("/sensor.csv");
+            sensorData = file;
+            FileOutputStream fOut1 = new FileOutputStream(sensorData);
+            PrintWriter pWriter1 = new PrintWriter(fOut1);
 
             //Grab size of storedData object.
             int sizeOfStoredData = storedActivityData.returnSize();
