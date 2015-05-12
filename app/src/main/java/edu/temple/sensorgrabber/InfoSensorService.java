@@ -9,8 +9,8 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by vmartin on 3/19/15.
