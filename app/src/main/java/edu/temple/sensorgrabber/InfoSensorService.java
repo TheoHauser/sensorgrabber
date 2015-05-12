@@ -9,6 +9,9 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by vmartin on 3/19/15.
  */
@@ -23,7 +26,12 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float[] mAccelerometerValues = null;
     float[] mMagneticValues = null;
     float orientation[] = new float[3];
-    long currentTime = System.currentTimeMillis();
+
+    //who knows if this works
+    SimpleDateFormat dateTime = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss");
+    Calendar calTime = Calendar.getInstance();
+
+    String currentTime;
 
 
     boolean bothSensorsHaveValues = false;
@@ -59,7 +67,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     }
 
 
-    //********** Sensor Methods **********
+    //********** Sensor Methods **********//
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -72,7 +80,8 @@ public class InfoSensorService extends Service implements SensorEventListener {
                 mMagneticValues = sensorEvent.values;
 
         //Check to see if both sensors have values.
-        if(mAccelerometerValues != null && mMagneticValues !=null) bothSensorsHaveValues = true;
+        if(mAccelerometerValues != null && mMagneticValues !=null)
+            bothSensorsHaveValues = true;
 
         //Both sensors have values so now we have to use those values to get our azimuth.
         if(bothSensorsHaveValues) {
@@ -86,7 +95,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             //If we are indeed successful then we will use that info to grab our orientation.
             if(success){
                 SensorManager.getOrientation(R,orientation);
-                currentTime= System.currentTimeMillis();
+                currentTime = dateTime.format(calTime.getTime());
             }
 
             //We have our values, now we should prep the intent that will send them back.
