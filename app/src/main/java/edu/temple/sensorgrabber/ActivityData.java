@@ -23,20 +23,20 @@ public class ActivityData {
 	}
 		
 	//Add X,Y,Z data along with Time to the temp array.
-	public void addXYZData(long timeData, float xData, float yData, float zData, String name){
+	public void addXYZData(String timeData, float xData, float yData, float zData, String name){
 		
 		//Combine all the inputs into a string to add to the list.
 		String tempString = null;
-		tempString = Long.toString(timeData) + "," + Float.toString(xData) + "," + Float.toString(yData) + "," + Float.toString(zData) + "," + name;
+		tempString = timeData + "," + Float.toString(xData) + "," + Float.toString(yData) + "," + Float.toString(zData) + "," + name;
 		activityVector.add(tempString);
 		
 	}
 
     //New method to add both our angles and our acceleration.
-    public void addAngleAccelData(long timeData, float xAngle, float yAngle, float zAngle, float xAccel, float yAccel, float zAccel, String name){
+    public void addAngleAccelData(String timeData, float xAngle, float yAngle, float zAngle, float xAccel, float yAccel, float zAccel, String name){
 
         String tempString = null;
-        tempString  = Long.toString(timeData) + "," +
+        tempString  = timeData + "," +
                 Float.toString(xAngle) + "," +
                 Float.toString(yAngle) + "," +
                 Float.toString(zAngle) + "," +
