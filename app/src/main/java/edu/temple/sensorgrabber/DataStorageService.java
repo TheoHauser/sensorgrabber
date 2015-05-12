@@ -22,7 +22,7 @@ public class DataStorageService extends Service {
     //Where we are going to store the stuff we need.
     ActivityData storedActivityData = new ActivityData();
     String nameOfCapture = "Test";
-    String fileName = Long.valueOf(System.currentTimeMillis()) + ".csv";
+    String fileName = InfoSensorService.currentTime + ".csv";
 
     public IBinder onBind(Intent intent) {
         return null;
