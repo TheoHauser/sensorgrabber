@@ -22,7 +22,7 @@ public class DataStorageService extends Service {
     //Where we are going to store the stuff we need.
     ActivityData storedActivityData = new ActivityData();
     String nameOfCapture = "Test";
-    String fileName = InfoSensorService.currentTime + ".csv";
+    String fileName; // = InfoSensorService.currentTime + ".csv";
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -72,7 +72,7 @@ public class DataStorageService extends Service {
             File sdCard = Environment.getExternalStorageDirectory();
             File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
             directory.mkdirs();
-            File file = new File(directory, fileName);
+            File file = new File(directory, fileName = InfoSensorService.currentTime + ".csv");
             FileOutputStream fOut = new FileOutputStream(file, true);
             PrintWriter pWriter = new PrintWriter(fOut);
 
