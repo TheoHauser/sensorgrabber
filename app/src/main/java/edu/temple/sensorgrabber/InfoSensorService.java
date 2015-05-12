@@ -27,7 +27,6 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float[] mMagneticValues = null;
     float orientation[] = new float[3];
 
-    //who knows if this works
     SimpleDateFormat dateTime = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss");
     Calendar calTime = Calendar.getInstance();
 
