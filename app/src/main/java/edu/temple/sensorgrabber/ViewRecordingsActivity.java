@@ -14,7 +14,7 @@ public class ViewRecordingsActivity extends ActionBarActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
+        setContentView(R.layout.activity_viewrecordings);
 
         //Somewhere in here create the list of files
 
