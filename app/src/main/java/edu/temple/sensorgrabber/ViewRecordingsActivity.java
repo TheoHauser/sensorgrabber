@@ -75,6 +75,12 @@ public class ViewRecordingsActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        String filename = (String) getListAdapter().getItem(position);
+
+    }
+
 }
 
 /*
