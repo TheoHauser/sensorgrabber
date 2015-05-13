@@ -1,24 +1,55 @@
 package edu.temple.sensorgrabber;
 
-import android.app.Fragment;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.util.Xml;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+import org.xml.sax.Parser;
+import org.xmlpull.v1.XmlPullParser;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by sam rizer on 5/13/2015.
  */
-public class ViewRecordingsActivity extends ActionBarActivity {
+public class ViewRecordingsActivity extends ListActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewrecordings);
+
+        int j = 0;
+        String dir = Environment.getExternalStorageDirectory() + "/sensorGrabber";
+        setTitle(dir);
+        File fdir = new File(dir);
+        String c[] = fdir.list();
+        String fileList[] = new String[c.length];
+        List values = new ArrayList();
+
+        for(File f : fdir.listFiles()){
+            fileList[j] = f.getAbsolutePath();
+            values.add(f);
+            j++;
+        }
+
+        ArrayAdapter adapter = new ArrayAdapter(this,
+                android.R.layout.simple_list_item_2, android.R.id.text1, values);
+        setListAdapter(adapter);
 
         final Button switchact =(Button)findViewById(R.id.buttonReturn);
         switchact.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +74,7 @@ public class ViewRecordingsActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
 
 /*

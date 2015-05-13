@@ -4,14 +4,8 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="430dp"
-        android:id="@+id/listViewRecordings"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.53"
-        android:headerDividersEnabled="false"
-        android:clickable="true" />
+    <ListView android:id="@android:id/list" android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:layout_width="wrap_content"
