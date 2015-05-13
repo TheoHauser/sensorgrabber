@@ -52,10 +52,19 @@
         android:text="Press To Record"
         android:id="@+id/toggleButtonRecord"
         android:checked="false"
-        android:onClick ="onClick"
+        android:onClick ="onClickRecord"
         android:layout_below="@+id/textPitch"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="134dp"
-        android:textOff="Press To Record" />
+        android:textOff="Press To Record"
+        android:layout_marginTop="134dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Recordings"
+        android:id="@+id/buttonViewRecordings"
+        android:layout_below="@+id/toggleButtonRecord"
+        android:layout_centerHorizontal="true"
+        android:onClick="OnClickViewRecordings" />
 
 </RelativeLayout>

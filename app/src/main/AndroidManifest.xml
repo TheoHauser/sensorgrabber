@@ -17,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ViewRecordingsActivity">
+        </activity>
         <service android:name=".InfoSensorService"
             />
         <service android:name=".DataStorageService"

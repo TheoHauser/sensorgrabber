@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -28,7 +30,6 @@ import java.io.FileOutputStream;
 import android.support.v4.app.DialogFragment;
 
 public class MainActivity extends ActionBarActivity{
-
 
     AlarmManager scheduler;
     Intent intentSchedule;
@@ -74,7 +75,8 @@ public class MainActivity extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.v("MainActivity:","Started");
+
+        Log.v("MainActivity:", "Started");
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("orientationValues"));
         LocalBroadcastManager.getInstance(this).registerReceiver(FileBReceiver, new IntentFilter("fileDone"));
 
@@ -109,35 +111,11 @@ public class MainActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClick(View view){
+    public void onClickRecord(View view) {
 
         Intent intent = new Intent( getApplicationContext(), DataStorageService.class);
 
-        switch(view.getId()){
-//            case R.id.buttonStart:
-//                Log.v("MainActivity:","Start Service Button Hit");
-//                //startService(intent);
-//                //nachos.addXYZData(12345l, 0f, 1f, 2f, "nachos");
-//                startAutoCheckOfSensors();
-//
-//                //Start the DataStorageService which is meant to listen to broadcasts and store them.
-//                startService(intent);
-//
-//                //Check to see if the service is running. If so let the user know.
-//                //if (isMyServiceRunning(DataStorageService.class)) {
-//                    //Let the user know.
-//
-//                //}
-//
-//                break;
-//
-//            case R.id.buttonStop:
-//                Log.v("MainActivity:","Stop Service Button Hit");
-//                stopAutoCheckOfSensors();
-//
-//                //Stop the DataStorageService which should hopefully write to a file.
-//                stopService(intent);
-//                break;
+        switch (view.getId()) {
 
             case R.id.toggleButtonRecord:
                 boolean on = ((ToggleButton) view).isChecked();
@@ -153,13 +131,15 @@ public class MainActivity extends ActionBarActivity{
                     ((ToggleButton) view).setText("Press To Record");
                 }
 
-
-
-
         }
     }
 
-    void startAutoCheckOfSensors(){
+    public void OnClickViewRecordings(View view) {
+        Intent intent = new Intent(this, ViewRecordingsActivity.class);
+        startActivity(intent);
+    }
+
+    void startAutoCheckOfSensors() {
         scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         intentSchedule = new Intent(getApplicationContext(), InfoSensorService.class );
         //PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -171,7 +151,7 @@ public class MainActivity extends ActionBarActivity{
         scheduler.cancel(scheduledIntent);
     }
 
-    void setTextValues(String time, String azimuth, String pitch, String roll){
+    void setTextValues(String time, String azimuth, String pitch, String roll) {
         TextView timeTextView = (TextView) findViewById(R.id.textTime);
         TextView azimuthTextView = (TextView) findViewById(R.id.textAzimuth);
         TextView pitchTextView = (TextView) findViewById(R.id.textPitch);
@@ -185,7 +165,7 @@ public class MainActivity extends ActionBarActivity{
 
     }
 
-    void sendFileViaEmail(String filename){
+    void sendFileViaEmail(String filename) {
 
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
