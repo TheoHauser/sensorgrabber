@@ -224,7 +224,7 @@ public class MainActivity extends ActionBarActivity{
         builder.setMessage("Save sensor data?")
                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            CharSequence ch = "File " + f + " saved in /sensorGrabber/";
+                            CharSequence ch = "File " + f + " saved in \n/sensorGrabber/";
                             Toast saved = Toast.makeText(getApplicationContext(), ch, Toast.LENGTH_LONG);
                             saved.show();
                         }
