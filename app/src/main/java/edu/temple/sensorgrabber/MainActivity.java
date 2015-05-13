@@ -2,9 +2,11 @@ package edu.temple.sensorgrabber;
 
 import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -23,9 +25,9 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import android.support.v4.app.DialogFragment;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 
 
     AlarmManager scheduler;
@@ -57,7 +59,11 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             //put here whatever you want your activity to do with the intent received
             Bundle args = intent.getExtras();
-            //String fileName = args.getString("filename");
+            String fileName = args.getString("filename");
+
+            AlertDialog s = askToSave(fileName);
+            s.show();
+
 
             //sendFileViaEmail(fileName);
 
@@ -210,5 +216,41 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         return false;
+    }
+
+    AlertDialog askToSave(String fileName){
+        final String f = fileName;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Save sensor data?")
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            CharSequence ch = "File " + f + " saved in /sensorGrabber/";
+                            Toast saved = Toast.makeText(getApplicationContext(), ch, Toast.LENGTH_LONG);
+                            saved.show();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            File sdCard = Environment.getExternalStorageDirectory();
+                            File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
+                            File file = new File(directory, f);
+                            boolean deleted = file.delete();
+
+                            CharSequence c = "Save Cancelled";
+                            CharSequence fail = "Cancel Failed, File "+ f+ " saved in /sensorGrabber";
+                            if(deleted){
+                                Toast delete = Toast.makeText(getApplicationContext(),c,Toast.LENGTH_SHORT);
+                                delete.show();
+                            }
+                            else{
+                                Toast failed = Toast.makeText(getApplicationContext(),fail, Toast.LENGTH_LONG);
+                                failed.show();
+                            }
+                        }
+                    });
+        AlertDialog s = builder.create();
+        return s;
+
+
     }
 }
