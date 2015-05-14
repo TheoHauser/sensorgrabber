@@ -31,6 +31,8 @@ import java.util.List;
  */
 public class ViewRecordingsActivity extends ListActivity {
 
+    File c[];
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewrecordings);
@@ -39,13 +41,14 @@ public class ViewRecordingsActivity extends ListActivity {
         String dir = Environment.getExternalStorageDirectory() + "/sensorGrabber";
         setTitle(dir);
         File fdir = new File(dir);
-        String c[] = fdir.list();
+        c = fdir.listFiles();
         String fileList[] = new String[c.length];
         List values = new ArrayList();
 
         for(File f : fdir.listFiles()){
             fileList[j] = f.getAbsolutePath();
-            values.add(f);
+            fileList[j] = fileList[j].substring(fileList[j].lastIndexOf('/'));
+            values.add(fileList[j]);
             j++;
         }
 
@@ -80,7 +83,7 @@ public class ViewRecordingsActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
-        String filename = getListAdapter().getItem(position).toString();
+        String filename = c[position].toString();
         File f = new File(filename);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(f));
         startActivity(intent);
