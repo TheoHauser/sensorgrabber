@@ -14,12 +14,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.net.Uri;
 
 import org.xml.sax.Parser;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,8 +79,11 @@ public class ViewRecordingsActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String filename = (String) getListAdapter().getItem(position);
 
+        String filename = getListAdapter().getItem(position).toString();
+        File f = new File(filename);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(f));
+        startActivity(intent);
     }
 
 }
