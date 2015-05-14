@@ -77,8 +77,7 @@ public class ViewRecordingsActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String filename = (String) getListAdapter().getItem(position);
-
+        String filename = (String) getListAdapter().getItem(position).toString();
     }
 
 }
@@ -86,90 +85,4 @@ public class ViewRecordingsActivity extends ListActivity {
 /*
 
     Here's the link I found for this: http://stackoverflow.com/questions/8906471/how-to-display-list-of-folders-and-files-using-androids-expandable-listview
-
-    public class customListAdapter extends BaseExpandableListAdapter {
-
-    private File folder1;
-    private File folder2;
-
-    private String[] groups = {};
-    private String[][] children = {};
-
-    public customListAdapter() {
-        // Sample data set.  children[i] contains the children (String[]) for groups[i].
-        folder1 = new File (Environment.getExternalStorageDirectory(),"/Folder1");
-        folder2 = new File (Environment.getExternalStorageDirectory(),"/Folder2");
-
-        String[] fileList1 = folder1.list();
-        String[] fileList2 = folder2.list();
-
-        Arrays.sort(fileList1);
-        Arrays.sort(fileList2);
-
-        groups = new String[] { "Folder1" , "Folder2" };
-        children = new String[][] { fileList1, fileList2 };
-    }//constructor
-
-
-    public Object getChild(int groupPosition, int childPosition) {
-        return children[groupPosition][childPosition];
-    }
-
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
-
-    public int getChildrenCount(int groupPosition) {
-        return children[groupPosition].length;
-    }
-
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-                                View convertView, ViewGroup parent) {
-
-        TextView textView = new TextView(this);
-        textView.setBackgroundColor(Color.BLACK);
-        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        textView.setPadding(100, 5, 0, 5);
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(23);
-        textView.setId(1000);
-
-        textView.setText(getChild(groupPosition, childPosition).toString());
-        return textView;
-    }//getChildView
-
-    public Object getGroup(int groupPosition) {
-        return groups[groupPosition];
-    }
-
-    public int getGroupCount() {
-        return groups.length;
-    }
-
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
-
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-            ViewGroup parent) {
-        TextView textView = new TextView(this);
-        textView.setBackgroundColor(Color.WHITE);
-        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        textView.setPadding(100, 0, 0, 0);
-        textView.setTextColor(Color.BLACK);
-        textView.setTextSize(25);
-        textView.setText(getGroup(groupPosition).toString());
-
-        return textView;
-    }
-
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
-
-    public boolean hasStableIds() {
-        return true;
-    }
-
-}//customListAdapter
- */
+*/
