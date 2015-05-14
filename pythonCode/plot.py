@@ -45,12 +45,12 @@ for i in range(len(values)):
     U = 10*np.cos(float(values[i][1]))
     V = 10*np.sin(float(values[i][1]))
     Ux = U - X
-    Vx = V - Y    
+    Vx = V - Y
     
     
     """
-    ax.arrow(X,Y,Ux,Vx, head_width=0.05, head_length=0.1, fc='k', ec='k')    
-    """    
+    ax.arrow(X,Y,Ux,Vx, head_width=0.05, head_length=0.1, fc='k', ec='k')
+    """
     
     plt.draw()
     ax.quiver(0,0,U,V,angles='xy',scale_units='xy',scale=1)    
