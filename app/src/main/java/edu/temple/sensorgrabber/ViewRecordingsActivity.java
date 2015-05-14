@@ -47,7 +47,7 @@ public class ViewRecordingsActivity extends ListActivity {
 
         for(File f : fdir.listFiles()){
             fileList[j] = f.getAbsolutePath();
-            fileList[j] = fileList[j].substring(fileList[j].lastIndexOf('/'));
+            fileList[j] = fileList[j].substring(fileList[j].lastIndexOf('/')+1);
             values.add(fileList[j]);
             j++;
         }

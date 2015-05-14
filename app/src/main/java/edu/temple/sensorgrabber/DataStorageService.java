@@ -25,7 +25,7 @@ public class DataStorageService extends Service {
     ActivityData storedActivityData = new ActivityData();
     String nameOfCapture = "Test";
 
-    SimpleDateFormat dateTime = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss:SSS");
+    SimpleDateFormat dateTime = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
     Calendar calTime = Calendar.getInstance();
     String fileName =  dateTime.format(calTime.getTime()) + ".csv";
 
