@@ -16,9 +16,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.net.Uri;
 
-import org.xml.sax.Parser;
-import org.xmlpull.v1.XmlPullParser;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;

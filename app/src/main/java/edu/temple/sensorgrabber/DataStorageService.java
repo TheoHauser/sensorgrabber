@@ -131,7 +131,7 @@ public class DataStorageService extends Service {
 
             //Now that I am logging more information I am going to use the addAngleAccelData() method instead of the addXYZData() method.
             storedActivityData.addAngleAccelData(time, Float.valueOf(azimuth), Float.valueOf(pitch), Float.valueOf(roll),
-                    Float.valueOf(xAccel),Float.valueOf(yAccel),Float.valueOf(zAccel),nameOfCapture);
+                    Float.valueOf(xAccel),Float.valueOf(yAccel),Float.valueOf(zAccel));
             }
 
         };
