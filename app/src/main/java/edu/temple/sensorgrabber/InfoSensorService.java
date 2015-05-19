@@ -28,7 +28,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float orientation[] = new float[3];
 
     //who knows if this works
-    SimpleDateFormat dateTime = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+    SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
     Calendar calTime = Calendar.getInstance();
 
     String currentTime;
@@ -95,7 +95,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             //If we are indeed successful then we will use that info to grab our orientation.
             if(success){
                 SensorManager.getOrientation(R,orientation);
-                currentTime = dateTime.format(calTime.getTime());
+                currentTime = time.format(calTime.getTime());
             }
 
             //We have our values, now we should prep the intent that will send them back.
