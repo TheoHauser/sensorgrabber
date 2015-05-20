@@ -119,6 +119,7 @@ public class DataStorageService extends Service {
             String azimuth = args.getString("azimuth");
             String pitch = args.getString("pitch");
             String roll = args.getString("roll");
+            String seconds = args.getString("seconds");
 
             //I have added some more data.
             String xAccel = args.getString("xAccel");
@@ -131,7 +132,7 @@ public class DataStorageService extends Service {
 
             //Now that I am logging more information I am going to use the addAngleAccelData() method instead of the addXYZData() method.
             storedActivityData.addAngleAccelData(time, Float.valueOf(azimuth), Float.valueOf(pitch), Float.valueOf(roll),
-                    Float.valueOf(xAccel),Float.valueOf(yAccel),Float.valueOf(zAccel));
+                    Float.valueOf(xAccel),Float.valueOf(yAccel),Float.valueOf(zAccel), Integer.valueOf(seconds));
             }
 
         };

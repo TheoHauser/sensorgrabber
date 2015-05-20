@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by vmartin on 3/19/15.
@@ -27,11 +28,13 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float[] mMagneticValues = null;
     float orientation[] = new float[3];
 
-    //who knows if this works
+    //get time
     SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
     Calendar calTime = Calendar.getInstance();
+    long ogTime = Calendar.getInstance().getTimeInMillis();
 
     String currentTime;
+    long seconds;
 
 
     boolean bothSensorsHaveValues = false;
@@ -57,6 +60,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
         intent.putExtra("azimuth", String.valueOf(orientation[0]));
         intent.putExtra("pitch", String.valueOf(orientation[1]));
         intent.putExtra("roll", String.valueOf(orientation[2]));
+        intent.putExtra("seconds", String.valueOf(seconds));
         //adding extra stuff for the accelerometer values.
         intent.putExtra("xAccel", String.valueOf(mAccelerometerValues[0]));
         intent.putExtra("yAccel", String.valueOf(mAccelerometerValues[1]));
@@ -96,6 +100,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             if(success){
                 SensorManager.getOrientation(R,orientation);
                 currentTime = time.format(calTime.getTime());
+                seconds = (ogTime- calTime.getTimeInMillis())/1000;
             }
 
             //We have our values, now we should prep the intent that will send them back.
