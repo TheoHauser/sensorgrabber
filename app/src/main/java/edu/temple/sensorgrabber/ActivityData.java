@@ -12,7 +12,8 @@ public class ActivityData {
 	//have to test it out.
 	
 	private static int defaultSize = 10000;
-	
+	int secondIncrement = 1;
+
 	//Declare Vector to store our data.
 	ArrayList<String> activityVector = new ArrayList<String>(defaultSize);
 	
@@ -43,9 +44,10 @@ public class ActivityData {
                 Float.toString(xAccel) + "," +
                 Float.toString(yAccel) + "," +
                 Float.toString(zAccel) + "," +
-				Integer.toString(seconds)+",";
+				Integer.toString(secondIncrement)+",";
 
         activityVector.add(tempString);
+		secondIncrement++;
 
 
     }

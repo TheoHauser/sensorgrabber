@@ -31,10 +31,10 @@ public class InfoSensorService extends Service implements SensorEventListener {
     //get time
     SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
     Calendar calTime = Calendar.getInstance();
-    long ogTime = Calendar.getInstance().getTimeInMillis();
+    long ogTime = calTime.getTimeInMillis();
 
     String currentTime;
-    long seconds;
+    int seconds;
 
 
     boolean bothSensorsHaveValues = false;
@@ -45,6 +45,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         prepareSensors();
+        //ogTime = calTime.getTimeInMillis();
         return START_STICKY;
         //return super.onStartCommand(intent, flags, startId);
     }
@@ -100,7 +101,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             if(success){
                 SensorManager.getOrientation(R,orientation);
                 currentTime = time.format(calTime.getTime());
-                seconds = (ogTime- calTime.getTimeInMillis())/1000;
+                //seconds = (ogTime - calTime.getTimeInMillis())/1000;
             }
 
             //We have our values, now we should prep the intent that will send them back.

@@ -87,10 +87,9 @@ public class DataStorageService extends Service {
             int sizeOfStoredData = storedActivityData.returnSize();
             String currentLineToWrite;
 
-            for(int i = 0; i < sizeOfStoredData; i++){
+            for(int i = 0; i < sizeOfStoredData; i++) {
                 currentLineToWrite = storedActivityData.pullXYZData(i);
                 pWriter.printf("%s\n", currentLineToWrite);
-
             }
 
             pWriter.close();
