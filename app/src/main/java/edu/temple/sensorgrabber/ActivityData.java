@@ -34,17 +34,18 @@ public class ActivityData {
 	}
 
     //New method to add both our angles and our acceleration.
-    public void addAngleAccelData(String timeData, float xAngle, float yAngle, float zAngle, float xAccel, float yAccel, float zAccel, int seconds){
+    public void addAngleAccelData(String timeData, float xAngle, float yAngle, float zAngle, /*float xAccel, float yAccel, float zAccel,*/ int seconds){
 
         String tempString = null;
-        tempString  = timeData + "," +
+        tempString  = /*timeData + "," +*/
+				Integer.toString(secondIncrement)+","+
                 Float.toString(xAngle) + "," +
                 Float.toString(yAngle) + "," +
-                Float.toString(zAngle) + "," +
-                Float.toString(xAccel) + "," +
-                Float.toString(yAccel) + "," +
-                Float.toString(zAccel) + "," +
-				Integer.toString(secondIncrement)+",";
+                Float.toString(zAngle) + "," ;
+//                Float.toString(xAccel) + "," +
+//                Float.toString(yAccel) + "," +
+//                Float.toString(zAccel) + "," +
+
 
         activityVector.add(tempString);
 		secondIncrement++;

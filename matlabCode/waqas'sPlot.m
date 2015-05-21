@@ -1,9 +1,9 @@
-filename = 'C:\Users\ABC\Desktop\Dropbox\UG_research\Waqas\data_with_plots\4-14-2015\1429046329147.csv';
-M = csvread(filename);
-time = M(:,1);
-azimuth = M(:,2);
-pitch = M(:,3);
-roll = M(:,4);
+filename = '/home/hauser2016/Project/sensorgrabber/pythonCode/data_with_plots/4-15-2015/05-20-2015 14:49:40.csv';
+M = csvread(filename,0,1);
+time = M(:,7);
+azimuth = M(:,1);
+pitch = M(:,2);
+roll = M(:,3);
 
 %converting from rad to deg
 azi = rad2deg(azimuth);

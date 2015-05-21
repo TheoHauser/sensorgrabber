@@ -49,7 +49,6 @@ public class MainActivity extends ActionBarActivity{
             String pitch = args.getString("pitch");
             String roll = args.getString("roll");
 
-
             Log.v("Sensor Values:", azimuth + "," + pitch + "," + roll);
             setTextValues(time, azimuth,pitch,roll);
         }
