@@ -1,4 +1,4 @@
-@@ -0,0 +1,259 @@
+
 package edu.temple.sensorgrabber;
 
 import android.app.Activity;
@@ -237,7 +237,7 @@ public class OrientationSensorService extends Service implements SensorEventList
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Register(ActivityManager., SensorManager.SENSOR_DELAY_FASTEST);
+        //Register(ActivityManager., SensorManager.SENSOR_DELAY_FASTEST);
         return START_STICKY;
     }
 
