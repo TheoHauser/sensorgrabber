@@ -34,11 +34,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float orientation1[] = new float[3];
 
     //testing rotation vector
-    float[] rotationMatrix = new float[16];
-    float[] outRotationMatrix = new float[16];
-    float currentOrientation;
-    float eyeLevelInclination;
-    float deviceOrientation;
+    float[] rotationMatrix = null;
 
     //get time
     SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
@@ -73,9 +69,9 @@ public class InfoSensorService extends Service implements SensorEventListener {
         intent.putExtra("roll", String.valueOf(orientation[2]));
         intent.putExtra("seconds", String.valueOf(seconds));
         //adding extra stuff for the accelerometer values.
- //       intent.putExtra("xAccel", String.valueOf(mAccelerometerValues[0]));
- //       intent.putExtra("yAccel", String.valueOf(mAccelerometerValues[1]));
- //       intent.putExtra("zAccel", String.valueOf(mAccelerometerValues[2]));
+        intent.putExtra("xAccel", String.valueOf(mAccelerometerValues[0]));
+        intent.putExtra("yAccel", String.valueOf(mAccelerometerValues[1]));
+        intent.putExtra("zAccel", String.valueOf(mAccelerometerValues[2]));
 
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -99,18 +95,16 @@ public class InfoSensorService extends Service implements SensorEventListener {
             case Sensor.TYPE_ROTATION_VECTOR:
                 rotationMatrix=new float[16];
                 SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+                SensorManager.getOrientation(rotationMatrix, orientation);
+            case Sensor.TYPE_ACCELEROMETER:
+                mAccelerometerValues = sensorEvent.values;
+
         }
 
-        SensorManager.getOrientation(rotationMatrix, orientation);
-
-        /*currentOrientation = (float) (Math.toDegrees(orientation[0]) *//*+ this.getDeclination()*//*); //Azimuth; (Degrees);
-        eyeLevelInclination = (float) Math.toDegrees(orientation[1]); //Pitch; (Degrees); down is 90 , up is -90.
-        deviceOrientation = (float) Math.toDegrees(orientation[2]); // Roll;*/
         currentTime = time.format(calTime.getTime());
 
-
-//        //Check to see if both sensors have values.
-//        if(mAccelerometerValues != null && mMagneticValues !=null){
+        //Check to see if both sensors have values.
+        if(mAccelerometerValues != null && rotationMatrix !=null){
             //Attempt to grab the rotation matrix.
 //            boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometerValues, mMagneticValues);
             //Check to see if we were successful in grabbing the rotation matrix.
@@ -131,7 +125,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             stopSelf();
 
 
-        //}
+        }
 
     }
 
@@ -143,12 +137,12 @@ public class InfoSensorService extends Service implements SensorEventListener {
     private void prepareSensors() {
         //Register the sensorManager and both the accelerometer and magnetic sensor.
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-//        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sensorRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         //Register listeners.
-//        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         //sensorManager.registerListener(this, sensorMagnetic, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, sensorRotationVector, SensorManager.SENSOR_DELAY_FASTEST);
     }
