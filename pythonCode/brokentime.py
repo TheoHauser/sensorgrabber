@@ -12,17 +12,21 @@ videoname = "VID_20150519_102443.mp4"
 
 datetime_string = videoname[4:8] + "/" + videoname[8:10] + "/" + videoname[10:12] + " " + videoname[13:15] + ":" + videoname[15:17] + ":" + videoname[17:19]
 dts = datetime.datetime.strptime(datetime_string, "%Y/%m/%d %H:%M:%S")
+runtime = time.time()
 
 fontname = "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
 font = ImageFont.FreeTypeFont(fontname, 36)
 
-def add_timestamp(video_frame):	
-	im = Image.fromarray(video_frame) # transforms the Numpy image into a PIL image
-	draw = ImageDraw.Draw(im)
-	draw.text((2, 2), str(dts), font=font)
-	return PIL_to_npimage(im) # transforms the PIL image back to a Numpy image
+def timestamp_filter(video_frame):
+        nowtime = time.time()
+        nowtime -= runtime
+        dts += datetime.timedelta(seconds=nowtime)
+        im = Image.fromarray(video_frame)
+        draw = ImageDraw.Draw(im)
+        draw.text((2, 2), str(dts), font=font)
+        return PIL_to_npimage(im)
 
 clip = mp.VideoFileClip(path+videoname)
-timestamped_clip =clip.fl_image(add_timestamp)
+timestamped_clip =clip.fl(timestamp_filter)
 #dts += datetime.timedelta(seconds=1)
 timestamped_clip.write_videofile(path + "TIMESTAMPED" + videoname, bitrate='8000k')
