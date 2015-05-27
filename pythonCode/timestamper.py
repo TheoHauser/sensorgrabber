@@ -5,6 +5,8 @@ import moviepy.editor as mp
 from moviepy.video.io.bindings import PIL_to_npimage
 import os
 
+#DO NOT FILM VERTICALLY
+
 #These need to be changed if loaded onto a different computer
 IN_PATH = "/home/reu/HealthAppVideos/"
 OUT_PATH = "/home/reu/HealthAppVideos/Timestamped/"
