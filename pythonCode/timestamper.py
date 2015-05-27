@@ -5,9 +5,11 @@ import moviepy.editor as mp
 from moviepy.video.io.bindings import PIL_to_npimage
 import os
 
+#These need to be changed if loaded onto a different computer
 IN_PATH = "/home/reu/HealthAppVideos/"
 OUT_PATH = "/home/reu/HealthAppVideos/Timestamped/"
 
+#Can be customized but it's not neccesary
 fontname = "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
 font = ImageFont.FreeTypeFont(fontname, 36)
 
@@ -26,7 +28,7 @@ def make_datetime_string(videoname):
 	return dts 
 
 def timestamp_filter(video_frame, t):
-	printtime = make_datetime_string(folder[i]) + datetime.timedelta(seconds=t)
+	printtime = make_datetime_string(folder[i]) + datetime.timedelta(seconds=t) #t = time of current frame
 	im = Image.fromarray(video_frame(t))
 	draw = ImageDraw.Draw(im)
 	draw.text((2, 2), str(printtime), font=font)
