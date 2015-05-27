@@ -6,6 +6,7 @@ from moviepy.video.io.bindings import PIL_to_npimage
 import os
 
 #DO NOT FILM VERTICALLY
+#TODO: runs super slow on thinkpad
 
 #These need to be changed if loaded onto a different computer
 IN_PATH = "/home/reu/HealthAppVideos/"
@@ -40,4 +41,4 @@ folder = load_folder(IN_PATH)
 for i in range(0, len(folder)):
 	clip = mp.VideoFileClip(IN_PATH+folder[i])
 	timestamped_clip = clip.fl(timestamp_filter)
-	timestamped_clip.write_videofile(OUT_PATH + "TIMESTAMPED_" + folder[i], bitrate='8000k')
+	timestamped_clip.write_videofile(OUT_PATH + "TIMESTAMPED_" + folder[i])
