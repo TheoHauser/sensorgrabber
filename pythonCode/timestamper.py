@@ -41,4 +41,4 @@ folder = load_folder(IN_PATH)
 for i in range(0, len(folder)):
 	clip = mp.VideoFileClip(IN_PATH+folder[i])
 	timestamped_clip = clip.fl(timestamp_filter)
-	timestamped_clip.write_videofile(OUT_PATH + "TIMESTAMPED_" + folder[i])
+	timestamped_clip.write_videofile(OUT_PATH + "TIMESTAMPED_" + folder[i], preset="ultrafast")
