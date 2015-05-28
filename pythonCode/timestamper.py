@@ -6,11 +6,10 @@ from moviepy.video.io.bindings import PIL_to_npimage
 import os
 
 #DO NOT FILM VERTICALLY
-#TODO: runs super slow on thinkpad
 
 #These need to be changed if loaded onto a different computer
-IN_PATH = "/home/reu/HealthAppVideos/"
-OUT_PATH = "/home/reu/HealthAppVideos/Timestamped/"
+IN_PATH = "/home/urp/SensorGrabber/Video/"
+OUT_PATH = "/home/urp/SensorGrabber/Video/Timestamped/"
 
 #Can be customized but it's not neccesary
 fontname = "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
@@ -40,5 +39,6 @@ def timestamp_filter(video_frame, t):
 folder = load_folder(IN_PATH)
 for i in range(0, len(folder)):
 	clip = mp.VideoFileClip(IN_PATH+folder[i])
+	clip.resize(0.5)
 	timestamped_clip = clip.fl(timestamp_filter)
 	timestamped_clip.write_videofile(OUT_PATH + "TIMESTAMPED_" + folder[i], preset="ultrafast")
