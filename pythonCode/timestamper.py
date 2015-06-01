@@ -24,9 +24,8 @@ def load_folder(path):
 
 def make_datetime_string(videoname):
 	#Manually-defined substrings are okay because it's the same for all videos recorded on android
-	datetime_string = (videoname[4:8] + "/" + videoname[8:10] + "/" + videoname[10:12] + " "
-			+ videoname[13:15] + ":" + videoname[15:17] + ":" + videoname[17:19])
-	dts = datetime.datetime.strptime(datetime_string, "%Y/%m/%d %H:%M:%S")
+	datetime_string = videoname[13:15] + ":" + videoname[15:17] + ":" + videoname[17:19]
+	dts = datetime.datetime.strptime(datetime_string, "%H:%M:%S")
 	return dts 
 
 def timestamp_filter(video_frame, t):
