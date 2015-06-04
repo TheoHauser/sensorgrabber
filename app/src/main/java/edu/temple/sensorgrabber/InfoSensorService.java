@@ -23,7 +23,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     private SensorManager sensorManager = null;
     private Sensor sensorAccelerometer = null;
     private Sensor sensorMagnetic = null;
-    private Sensor sensorRotationVector = null;
+    private Sensor sensorGeoRotationVector = null;
 
     //Arrays to hold sensor values.
     private float R[] = new float[9];
@@ -37,7 +37,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float[] rotationMatrix = null;
 
     //get time
-    SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
+    SimpleDateFormat time = new SimpleDateFormat("HHmmss");
     Calendar calTime = Calendar.getInstance();
     long ogTime = calTime.getTimeInMillis();
 
@@ -139,12 +139,12 @@ public class InfoSensorService extends Service implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        sensorRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        sensorGeoRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         //Register listeners.
-        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         //sensorManager.registerListener(this, sensorMagnetic, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, sensorRotationVector, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorGeoRotationVector, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
