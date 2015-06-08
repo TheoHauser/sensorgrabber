@@ -95,6 +95,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
             case Sensor.TYPE_ROTATION_VECTOR:
                 rotationMatrix=new float[16];
                 SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
                 SensorManager.getOrientation(rotationMatrix, orientation);
             case Sensor.TYPE_ACCELEROMETER:
                 mAccelerometerValues = sensorEvent.values;
