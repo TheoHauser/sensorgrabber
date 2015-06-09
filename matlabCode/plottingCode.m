@@ -7,10 +7,12 @@ roll = M(:,5);
 
 %converting from rad to deg
 azi = rad2deg(azimuth);
-if(azi<0)
-    azi = azi+360;
+len = length(azi)-1;
+for i=1:len
+    if(azi(i)<0)
+        azi(i) = azi(i)+360;
+    end
 end
-
 %pit = rad2deg(pitch);
 %rol = rad2deg(roll);
 
