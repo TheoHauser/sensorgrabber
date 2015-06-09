@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity{
     PendingIntent scheduledIntent;
 
     //Set how many MS between each attempted update.
-    final int repeatMS = 500;
+    final int repeatMS = 1000;
 
     private BroadcastReceiver BReceiver = new BroadcastReceiver(){
 

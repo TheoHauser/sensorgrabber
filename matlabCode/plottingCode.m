@@ -1,12 +1,16 @@
-filename = '/home/hauser2016/Project/sensorgrabber/pythonCode/data_with_plots/4-15-2015/05-25-2015 13:37:10.csv';
+filename = '/home/hauser2016/Project/sensorgrabber/matlabCode/CSV Data/06-04-2015 14:38:58.csv';
 M = csvread(filename);
-time = M(:,1);
-azimuth = M(:,2);
-pitch = M(:,3);
-roll = M(:,4);
+time = M(:,2);
+azimuth = M(:,3);
+pitch = M(:,4);
+roll = M(:,5);
 
 %converting from rad to deg
 azi = rad2deg(azimuth);
+if(azi<0)
+    azi = (abs(azi))+180;
+end
+
 %pit = rad2deg(pitch);
 %rol = rad2deg(roll);
 
@@ -18,11 +22,11 @@ azis = smooth(azi,0.3,'rloess');
 %unfiltered plot
 figure(1);
 plot(time,azi,'-O');
-axis([0 inf -180 180]); 
+axis([0 inf -10 370]); 
 
 hold on
 
 %smooth plot
 figure(2);
 plot(time,azis,'-O');
-axis([0 inf -180 180]);
+axis([0 inf -10 370]);

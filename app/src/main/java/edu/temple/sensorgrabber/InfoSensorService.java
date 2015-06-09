@@ -143,9 +143,9 @@ public class InfoSensorService extends Service implements SensorEventListener {
         sensorGeoRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         //Register listeners.
-        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         //sensorManager.registerListener(this, sensorMagnetic, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, sensorGeoRotationVector, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorGeoRotationVector, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
 
