@@ -8,7 +8,7 @@ roll = M(:,5);
 %converting from rad to deg
 azi = rad2deg(azimuth);
 if(azi<0)
-    azi = (abs(azi))+180;
+    azi = azi+360;
 end
 
 %pit = rad2deg(pitch);
