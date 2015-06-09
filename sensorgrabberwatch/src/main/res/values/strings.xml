@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SensorgrabberWatch</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_text">Azimuth Recorder</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
+</resources>

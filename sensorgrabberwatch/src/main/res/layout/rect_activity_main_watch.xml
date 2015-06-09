@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical"
+    tools:context=".MainWatchActivity" tools:deviceIds="wear_square">
+
+    <TextView android:text="@string/title_text" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textTitle"
+        android:textStyle="bold"
+        android:elegantTextHeight="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:id="@+id/textTime"
+        android:layout_below="@+id/textTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Azimuth"
+        android:id="@+id/textAzimuth"
+        android:layout_below="@+id/textTime"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roll"
+        android:id="@+id/textRoll"
+        android:layout_below="@+id/textAzimuth"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pitch"
+        android:id="@+id/textPitch"
+        android:layout_below="@+id/textRoll"
+        android:layout_centerHorizontal="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Press To Record"
+        android:id="@+id/toggleButtonRecord"
+        android:checked="false"
+        android:onClick ="onClickRecord"
+        android:layout_below="@+id/textPitch"
+        android:layout_centerHorizontal="true"
+        android:textOff="Press To Record"
+        android:layout_marginTop="10dp" />
+
+
+
+</LinearLayout>

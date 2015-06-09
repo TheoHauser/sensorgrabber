@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sensorgrabber.iml" filepath="$PROJECT_DIR$/sensorgrabber.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sensorgrabberwatch/sensorgrabberwatch.iml" filepath="$PROJECT_DIR$/sensorgrabberwatch/sensorgrabberwatch.iml" />
     </modules>
   </component>
 </project>
