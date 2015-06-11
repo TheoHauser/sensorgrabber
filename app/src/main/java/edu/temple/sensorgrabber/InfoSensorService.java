@@ -91,12 +91,13 @@ public class InfoSensorService extends Service implements SensorEventListener {
 //            mMagneticValues = sensorEvent.values;
 
         switch (sensorEvent.sensor.getType()) {
-
-            case Sensor.TYPE_ROTATION_VECTOR:
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                mMagneticValues = sensorEvent.values;
+            /*case Sensor.TYPE_ROTATION_VECTOR:
                 rotationMatrix=new float[16];
                 SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
                 SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
-                SensorManager.getOrientation(rotationMatrix, orientation);
+                SensorManager.getOrientation(rotationMatrix, orientation);*/
             case Sensor.TYPE_ACCELEROMETER:
                 mAccelerometerValues = sensorEvent.values;
 
@@ -107,14 +108,14 @@ public class InfoSensorService extends Service implements SensorEventListener {
         //Check to see if both sensors have values.
         if(mAccelerometerValues != null && rotationMatrix !=null){
             //Attempt to grab the rotation matrix.
-//            boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometerValues, mMagneticValues);
+            boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometerValues, mMagneticValues);
             //Check to see if we were successful in grabbing the rotation matrix.
             //If we are indeed successful then we will use that info to grab our orientation.
-  //          if(success){
-//                SensorManager.getOrientation(R,orientation1);
-//                currentTime = time.format(calTime.getTime());
-//                //seconds = (ogTime - calTime.getTimeInMillis())/1000;
-    //        }
+            if(success){
+                SensorManager.getOrientation(R,orientation);
+                //currentTime = time.format(calTime.getTime());
+                //seconds = (ogTime - calTime.getTimeInMillis())/1000;
+            }
 
             //We have our values, now we should prep the intent that will send them back.
             sendBroadcast();
@@ -129,7 +130,6 @@ public class InfoSensorService extends Service implements SensorEventListener {
         }
 
     }
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
