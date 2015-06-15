@@ -84,23 +84,28 @@ public class InfoSensorService extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
 
 //        //Grab the sensor information from the sensor that is callin this method.
-//        if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-//            mAccelerometerValues = sensorEvent.values;
-//
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            mAccelerometerValues = sensorEvent.values;
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            rotationMatrix = new float[16];
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+            SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
+            SensorManager.getOrientation(rotationMatrix, orientation);
+        }
 //        if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
 //            mMagneticValues = sensorEvent.values;
 
-        switch (sensorEvent.sensor.getType()) {
-
-            case Sensor.TYPE_ROTATION_VECTOR:
-                rotationMatrix=new float[16];
-                SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
-                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
-                SensorManager.getOrientation(rotationMatrix, orientation);
-            case Sensor.TYPE_ACCELEROMETER:
-                mAccelerometerValues = sensorEvent.values;
-
-        }
+//        switch (sensorEvent.sensor.getType()) {
+//
+//            case Sensor.TYPE_ROTATION_VECTOR:
+//                rotationMatrix=new float[16];
+//                SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+//                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
+//                SensorManager.getOrientation(rotationMatrix, orientation);
+//            case Sensor.TYPE_ACCELEROMETER:
+//                mAccelerometerValues = sensorEvent.values;
+//
+//        }
 
         currentTime = time.format(calTime.getTime());
 
