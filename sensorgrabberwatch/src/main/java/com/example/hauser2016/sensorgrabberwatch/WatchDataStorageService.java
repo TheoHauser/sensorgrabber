@@ -11,6 +11,8 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.android.gms.wearable.WearableListenerService;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -20,7 +22,7 @@ import java.util.Calendar;
 /**
  * Created by hauser2016 on 6/9/15.
  */
-public class WatchDataStorageService extends Service {
+public class WatchDataStorageService extends WearableListenerService {
     //Where we are going to store the stuff we need.
     WatchActivityData storedActivityData = new WatchActivityData();
     String nameOfCapture = "Test";
@@ -30,9 +32,10 @@ public class WatchDataStorageService extends Service {
 
     String fileName =  dateTime.format(calTime.getTime()) + ".csv";
 
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+
+    //public IBinder onBind(Intent intent) {
+    //    return null;
+    //}
 
     @Override
     public void onCreate() {
