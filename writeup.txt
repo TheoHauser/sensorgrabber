@@ -1,0 +1,6 @@
+>desc. of program
+>quirks
+>???
+>profit
+
+Our Android application, SensorGrabber, uses a combination of Android-platform sensors to record and save data pertaining to movement and direction. In the main window, the current time and the device's azimuth, pitch, and roll are displayed. The user is provided with two buttons, one which begins recording the phone's sensor data.
