@@ -3,4 +3,14 @@
 >???
 >profit
 
-Our Android application, SensorGrabber, uses a combination of Android-platform sensors to record and save data pertaining to movement and direction. In the main window, the current time and the device's azimuth, pitch, and roll are displayed. The user is provided with two buttons, one which begins recording the phone's sensor data.
+Our Android application, SensorGrabber, uses a combination of Android-platform sensors to record and save data pertaining to movement and direction. (talk about watch and what we do better?)
+
+
+~~~~~~~~~~outline for desc.~~~~~~~~~~
+	>literally how the app works
+	>why we chose certain sensors
+	>
+	
+In the main window, the current time and the device's azimuth, pitch, and roll are displayed. The user is provided with two buttons, one of which records the phone's sensor data. The ape collects data from TYPE_ACCELEROMETER and TYPE_ROTATION_VECTOR, which respectively detects the phone's acceleration on a three-dimensional coordinate plane and the phone's direction. When recording, the app collects data into an ArrayList on the current time, data-point increment (?), azimuth in radians, pitch, roll, and acceleration on the x, y, and z axis. Once the user presses "Stop Recording", the user is asked to save the recording, then data from the ArrayList is saved to a .csv file. Due to limitations of our device hardware and the Android SDK, the data is collected once every [insert time]. Despite this limitation, through our initial tests we determined that the frequency of collected data is sufficient for our purposes (elaborate on in "quirks"?). The second button takes the user to a new window that displays previous recordings, and allows the user to click each recording and view it in a separate program.
+
+
