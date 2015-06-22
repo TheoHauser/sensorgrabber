@@ -37,7 +37,7 @@ public class InfoSensorService extends Service implements SensorEventListener {
     float[] rotationMatrix = null;
 
     //get time
-    SimpleDateFormat time = new SimpleDateFormat("HHmmss");
+    SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss:SSS");
     Calendar calTime = Calendar.getInstance();
     long ogTime = calTime.getTimeInMillis();
 

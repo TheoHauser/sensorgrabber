@@ -21,10 +21,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-public class MainWatchActivity extends Activity {
+public class MainWatchActivity extends Activity implements
+        DataApi.DataListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
+    GoogleApiClient mGoogleApiClient;
     AlarmManager scheduler;
     Intent intentSchedule;
     PendingIntent scheduledIntent;
@@ -33,7 +50,7 @@ public class MainWatchActivity extends Activity {
     //Set how many MS between each attempted update.
     final int repeatMS = 1000;
 
-    private BroadcastReceiver BReceiver = new BroadcastReceiver(){
+    private BroadcastReceiver BReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -49,7 +66,7 @@ public class MainWatchActivity extends Activity {
         }
     };
 
-    private BroadcastReceiver FileBReceiver = new BroadcastReceiver(){
+    private BroadcastReceiver FileBReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -57,8 +74,8 @@ public class MainWatchActivity extends Activity {
             Bundle args = intent.getExtras();
             String fileName = args.getString("filename");
 
-            AlertDialog s = askToSave(fileName);
-            s.show();
+            askToSave(fileName);
+
 
 
             //sendFileViaEmail(fileName);
@@ -71,6 +88,7 @@ public class MainWatchActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_watch);
+
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -78,18 +96,34 @@ public class MainWatchActivity extends Activity {
                 TextView mTextView = (TextView) stub.findViewById(R.id.text);
             }
         });
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(BReceiver);
+        Wearable.DataApi.removeListener(mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onStart();
+        mGoogleApiClient.connect();
     }
 
 
     public void onClickRecord(View view) {
 
-        Intent intent = new Intent( getApplicationContext(), WatchDataStorageService.class);
+        Intent intent = new Intent(getApplicationContext(), WatchDataStorageService.class);
 
         switch (view.getId()) {
 
@@ -112,13 +146,13 @@ public class MainWatchActivity extends Activity {
 
     void startAutoCheckOfSensors() {
         scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        intentSchedule = new Intent(getApplicationContext(), WatchInfoSensorService.class );
+        intentSchedule = new Intent(getApplicationContext(), WatchInfoSensorService.class);
         //PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intentSchedule, 0);
-        scheduler.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), repeatMS, scheduledIntent );
+        scheduler.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), repeatMS, scheduledIntent);
     }
 
-    void stopAutoCheckOfSensors(){
+    void stopAutoCheckOfSensors() {
         scheduler.cancel(scheduledIntent);
     }
 
@@ -139,7 +173,7 @@ public class MainWatchActivity extends Activity {
     void sendFileViaEmail(String filename) {
 
         File sdCard = Environment.getExternalStorageDirectory();
-        File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
+        File directory = new File(sdCard.getAbsolutePath() + "/sensorGrabber");
         File file = new File(directory, filename);
 
 
@@ -169,38 +203,93 @@ public class MainWatchActivity extends Activity {
         return false;
     }
 
-    AlertDialog askToSave(String fileName){
+    void askToSave(String fileName) {
         final String f = fileName;
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainWatchActivity.this);
-        builder.setMessage("Save sensor data?")
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        CharSequence ch = "File " + f + " saved in \n/sensorGrabber/";
-                        Toast saved = Toast.makeText(getApplicationContext(), ch, Toast.LENGTH_LONG);
-                        saved.show();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        File sdCard = Environment.getExternalStorageDirectory();
-                        File directory = new File(sdCard.getAbsolutePath() + "/sensorGrabberWatch");
-                        File file = new File(directory, f);
-                        boolean deleted = file.delete();
 
-                        CharSequence c = "Save Cancelled";
-                        CharSequence fail = "Cancel Failed, File " + f + " saved in /sensorGrabberWatch";
-                        if (deleted) {
-                            Toast delete = Toast.makeText(getApplicationContext(), c, Toast.LENGTH_SHORT);
-                            delete.show();
-                        } else {
-                            Toast failed = Toast.makeText(getApplicationContext(), fail, Toast.LENGTH_LONG);
-                            failed.show();
-                        }
-                    }
-                });
-        AlertDialog s = builder.create();
-        return s;
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File(sdCard.getAbsolutePath() + "/sensorGrabberWatch/");
+        File file = new File(directory, f);
 
+        FileInputStream fileInputStream = null;
+        byte[] bFile = new byte[(int) file.length()];
+
+        try{
+            fileInputStream = new FileInputStream(file);
+            fileInputStream.read(bFile);
+            fileInputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Asset asset = Asset.createFromBytes(bFile);
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/txt");
+        dataMap.getDataMap().putAsset("com.example.company.key.TXT", asset);
+        PutDataRequest request = dataMap.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                .putDataItem(mGoogleApiClient, request);
+        if(pendingResult == null){
+            CharSequence t = "error in sending data";
+            Toast errorSending = Toast.makeText(getApplicationContext(), t, Toast.LENGTH_SHORT);
+            errorSending.show();
+        }
+        else{
+            CharSequence s = "sent to phone storage";
+            Toast sent = Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT);
+            sent.show();
+        }
+
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MainWatchActivity.this);
+//        builder.setMessage("Save sensor data?")
+//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        CharSequence ch = "File " + f + " saved in \n/sensorGrabber/";
+//                        Toast saved = Toast.makeText(getApplicationContext(), ch, Toast.LENGTH_LONG);
+//                        saved.show();
+//                    }
+//                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        File sdCard = Environment.getExternalStorageDirectory();
+//                        File directory = new File(sdCard.getAbsolutePath() + "/sensorGrabberWatch/");
+//                        File file = new File(directory, f);
+//                        boolean deleted = file.delete();
+//
+//                        CharSequence c = "Save Cancelled";
+//                        CharSequence fail = "Cancel Failed, File " + f + " saved in /sensorGrabberWatch";
+//                        if (deleted) {
+//                            Toast delete = Toast.makeText(getApplicationContext(), c, Toast.LENGTH_SHORT);
+//                            delete.show();
+//                        } else {
+//                            Toast failed = Toast.makeText(getApplicationContext(), fail, Toast.LENGTH_LONG);
+//                            failed.show();
+//                        }
+//                    }
+//                });
+//        AlertDialog s = builder.create();
+
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+
+    }
+
+
+    public void onDataChanged(DataEventBuffer dataEventBuffer) {
+
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 }
