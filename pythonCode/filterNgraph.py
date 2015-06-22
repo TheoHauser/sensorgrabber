@@ -1,8 +1,6 @@
-from math import factorial
+from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-from pylab import xlim, ylim
-from scipy import interpolate
 
 #Savitzky-Golay Filter
 #https://en.wikipedia.org/w/index.php?title=Savitzky%E2%80%93Golay_filter
@@ -30,7 +28,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 
 data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-16-2015 14:57:58.csv', delimiter=',', names=['time', 'sec', 'azi'])
 
-x = data['sec'] * 0.67
+x = datetime.strptime(str(data['time']), '%H:%M:%S') #FIX THIS
 y = data['azi']
 ynew = savitzky_golay(y, 3, 1)
 
