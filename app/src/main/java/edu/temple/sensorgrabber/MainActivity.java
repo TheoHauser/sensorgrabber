@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -28,22 +27,18 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
-
 import android.support.v4.app.DialogFragment;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 
     AlarmManager scheduler;
     Intent intentSchedule;
     PendingIntent scheduledIntent;
 
     //Set how many MS between each attempted update.
-    final int repeatMS = 750;
+    final int repeatMS = 700;
 
-    private BroadcastReceiver BReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver BReceiver = new BroadcastReceiver(){
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -55,11 +50,11 @@ public class MainActivity extends ActionBarActivity {
             String roll = args.getString("roll");
 
             Log.v("Sensor Values:", azimuth + "," + pitch + "," + roll);
-            setTextValues(time, azimuth, pitch, roll);
+            setTextValues(time, azimuth,pitch,roll);
         }
     };
 
-    private BroadcastReceiver FileBReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver FileBReceiver = new BroadcastReceiver(){
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -69,7 +64,6 @@ public class MainActivity extends ActionBarActivity {
 
             AlertDialog s = askToSave(fileName);
             s.show();
-            stopAutoCheckOfSensors();
 
 
             //sendFileViaEmail(fileName);
@@ -77,7 +71,6 @@ public class MainActivity extends ActionBarActivity {
 
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +80,6 @@ public class MainActivity extends ActionBarActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(BReceiver, new IntentFilter("orientationValues"));
         LocalBroadcastManager.getInstance(this).registerReceiver(FileBReceiver, new IntentFilter("fileDone"));
 
-        Intent serviceIntent = new Intent(this, WatchListenerService.class);
-        serviceIntent.setAction("edu.temple.sensorgrabber.WatchListenerService");
-        startService(serviceIntent);
     }
 
 
@@ -123,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void onClickRecord(View view) {
 
-        Intent intent = new Intent(getApplicationContext(), DataStorageService.class);
+        Intent intent = new Intent( getApplicationContext(), DataStorageService.class);
 
         switch (view.getId()) {
 
@@ -137,7 +127,6 @@ public class MainActivity extends ActionBarActivity {
 
 
                 } else {
-                    stopAutoCheckOfSensors();
                     stopService(intent);
                     ((ToggleButton) view).setText("Press To Record");
                 }
@@ -152,13 +141,13 @@ public class MainActivity extends ActionBarActivity {
 
     void startAutoCheckOfSensors() {
         scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        intentSchedule = new Intent(getApplicationContext(), InfoSensorService.class);
+        intentSchedule = new Intent(getApplicationContext(), InfoSensorService.class );
         //PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intentSchedule, 0);
-        scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), repeatMS, scheduledIntent);
+        scheduler.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), repeatMS, scheduledIntent );
     }
 
-    void stopAutoCheckOfSensors() {
+    void stopAutoCheckOfSensors(){
         scheduler.cancel(scheduledIntent);
     }
 
@@ -179,7 +168,7 @@ public class MainActivity extends ActionBarActivity {
     void sendFileViaEmail(String filename) {
 
         File sdCard = Environment.getExternalStorageDirectory();
-        File directory = new File(sdCard.getAbsolutePath() + "/sensorGrabber");
+        File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
         File file = new File(directory, filename);
 
 
@@ -209,38 +198,39 @@ public class MainActivity extends ActionBarActivity {
         return false;
     }
 
-    AlertDialog askToSave(String fileName) {
+    AlertDialog askToSave(String fileName){
         final String f = fileName;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("Save sensor data?")
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        CharSequence ch = "File " + f + " saved in \n/sensorGrabber/";
-                        Toast saved = Toast.makeText(getApplicationContext(), ch, Toast.LENGTH_LONG);
-                        saved.show();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        File sdCard = Environment.getExternalStorageDirectory();
-                        File directory = new File(sdCard.getAbsolutePath() + "/sensorGrabber");
-                        File file = new File(directory, f);
-                        boolean deleted = file.delete();
-
-                        CharSequence c = "Save Cancelled";
-                        CharSequence fail = "Cancel Failed, File " + f + " saved in /sensorGrabber";
-                        if (deleted) {
-                            Toast delete = Toast.makeText(getApplicationContext(), c, Toast.LENGTH_SHORT);
-                            delete.show();
-                        } else {
-                            Toast failed = Toast.makeText(getApplicationContext(), fail, Toast.LENGTH_LONG);
-                            failed.show();
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            CharSequence ch = "File " + f + " saved in \n/sensorGrabber/";
+                            Toast saved = Toast.makeText(getApplicationContext(), ch, Toast.LENGTH_LONG);
+                            saved.show();
                         }
-                    }
-                });
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            File sdCard = Environment.getExternalStorageDirectory();
+                            File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
+                            File file = new File(directory, f);
+                            boolean deleted = file.delete();
+
+                            CharSequence c = "Save Cancelled";
+                            CharSequence fail = "Cancel Failed, File "+ f+ " saved in /sensorGrabber";
+                            if(deleted){
+                                Toast delete = Toast.makeText(getApplicationContext(),c,Toast.LENGTH_SHORT);
+                                delete.show();
+                            }
+                            else{
+                                Toast failed = Toast.makeText(getApplicationContext(),fail, Toast.LENGTH_LONG);
+                                failed.show();
+                            }
+                        }
+                    });
         AlertDialog s = builder.create();
         return s;
 
-    }
 
+    }
 }
