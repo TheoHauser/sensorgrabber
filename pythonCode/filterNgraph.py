@@ -6,6 +6,7 @@ import numpy as np
 import datetime
 
 #NOT USED
+#EVER
 def make_time_array(urList):
 	aList = np.zeros((len(urList)), dtype=None)
 	for i in range(0, len(aList)):
