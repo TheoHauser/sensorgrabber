@@ -1,18 +1,12 @@
-filename = '/home/hauser2016/Project/sensorgrabber/matlabCode/CSV Data/06-04-2015 14:38:58.csv';
+filename = '/home/hauser2016/Project/sensorgrabber/matlabCode/CSV Data/06-23-2015 10:34:40';
 M = csvread(filename);
-time = M(:,2);
+time = M(:,1);
 azimuth = M(:,3);
 pitch = M(:,4);
 roll = M(:,5);
 
 %converting from rad to deg
 azi = rad2deg(azimuth);
-len = length(azi)-1;
-for i=1:len
-    if(azi(i)<0)
-        azi(i) = azi(i)+360;
-    end
-end
 %pit = rad2deg(pitch);
 %rol = rad2deg(roll);
 
