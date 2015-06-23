@@ -1,8 +1,20 @@
-from datetime import datetime
+from math import factorial
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
+import datetime
+
+def make_time_array(urList):
+	aList = np.zeros((len(urList)), dtype=None)
+	for i in range(0, len(aList)):
+		temp = matplotlib.dates.date2num()
+		print temp
+		aList[i] = str(temp)
+	return aList
 
 #Savitzky-Golay Filter
+#http://wiki.scipy.org/Cookbook/SavitzkyGolay
 #https://en.wikipedia.org/w/index.php?title=Savitzky%E2%80%93Golay_filter
 def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 	try:
@@ -26,19 +38,17 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 	y = np.concatenate((firstvals, y, lastvals))
 	return np.convolve( m[::-1], y, mode='valid')	
 
-data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-16-2015 14:57:58.csv', delimiter=',', names=['time', 'sec', 'azi'])
+data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-16-2015 14:57:58.csv', 
+		      dtype=["|S13", int, float], delimiter=',', names=['time', 'sec', 'azi'])
 
-x = datetime.strptime(str(data['time']), '%H:%M:%S') #FIX THIS
+x = data['sec']
 y = data['azi']
-ynew = savitzky_golay(y, 3, 1)
+#xnew = np.array(matplotlib.dates.DateFormatter(x))
+#print xnew
+ynew = np.array(savitzky_golay(y, 3, 1))
 
 plt.figure(1)
-plt.plot(x, ynew, '-', x, y, 'o')
-plt.yticks(range(-4, 4, 1))
+plt.plot(x, y, 'o', x, ynew, '-')
+plt.yticks(range(-4, 5, 1))
+plt.xticks(range(0, len(data), 10))
 plt.show()
-
-#noFilter
-#plt.figure(1)
-#plt.plot(data['sec'], (((np.floor(data['azi'])+np.ceil(data['azi']))/2)), label='azimuth')
-#plt.plot(data['sec'], data['azi'], label='azimuth')
-#plt.show()
