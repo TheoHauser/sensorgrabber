@@ -5,11 +5,11 @@ from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
 import datetime
 
+#NOT USED
 def make_time_array(urList):
 	aList = np.zeros((len(urList)), dtype=None)
 	for i in range(0, len(aList)):
 		temp = matplotlib.dates.date2num()
-		print temp
 		aList[i] = str(temp)
 	return aList
 
@@ -43,12 +43,15 @@ data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-16-2015 14:57:58.csv',
 
 x = data['sec']
 y = data['azi']
-#xnew = np.array(matplotlib.dates.DateFormatter(x))
-#print xnew
 ynew = np.array(savitzky_golay(y, 3, 1))
 
 plt.figure(1)
 plt.plot(x, y, 'o', x, ynew, '-')
+
+ax = plt.gca()
+ax.set_xticklabels(data['time'])
+
+plt.locator_params(nbins=len(data))
 plt.yticks(range(-4, 5, 1))
-plt.xticks(range(0, len(data), 10))
+plt.xticks(rotation=70)
 plt.show()
