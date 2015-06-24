@@ -5,15 +5,6 @@ from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
 import datetime
 
-#NOT USED
-#EVER
-def make_time_array(urList):
-	aList = np.zeros((len(urList)), dtype=None)
-	for i in range(0, len(aList)):
-		temp = matplotlib.dates.date2num()
-		aList[i] = str(temp)
-	return aList
-
 #Savitzky-Golay Filter
 #http://wiki.scipy.org/Cookbook/SavitzkyGolay
 #https://en.wikipedia.org/w/index.php?title=Savitzky%E2%80%93Golay_filter
