@@ -5,8 +5,6 @@ from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
 import datetime
 
-#COLUMN H FOR Z-AXIS DATA
-
 #Savitzky-Golay Filter
 #http://wiki.scipy.org/Cookbook/SavitzkyGolay
 #https://en.wikipedia.org/w/index.php?title=Savitzky%E2%80%93Golay_filter
@@ -32,7 +30,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 	y = np.concatenate((firstvals, y, lastvals))
 	return np.convolve( m[::-1], y, mode='valid')	
 
-data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-16-2015 14:57:58.csv', 
+data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-25-2015 15:55:38.csv', 
 		      dtype=["|S13", int, float, float, float, float, float, float], delimiter=',', 
 		      names=['time', 'sec', 'azi', 'pitch', 'roll', 'accx', 'accy', 'accz'])
 
@@ -41,13 +39,14 @@ y = data['azi']
 acc_z = data['accz']
 degree_y = np.array(np.degrees(y))
 s_v_y = np.array(savitzky_golay(degree_y, 3, 1))
+adjusted_acc = np.array(np.sqrt((data['accx']**2) + (data['accy']**2) + (data['accz']**2)))
 
 #RAW DATA
 plt.figure(1)
 plt.plot(x, y, 'o')
 ax = plt.gca()
-ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data) / 4)
+ax.set_xticklabels(data['time']) #THIS STILL DOESN'T WORK
+plt.locator_params(nbins=len(data)) #THIS TOO
 plt.yticks(range(-4, 5, 1))
 plt.xticks(rotation=70)
 plt.show()
@@ -57,7 +56,7 @@ plt.figure(2)
 plt.plot(x,degree_y, '-')
 ax = plt.gca()
 ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data) / 4)
+plt.locator_params(nbins=len(data))
 plt.xticks(rotation=70)
 plt.show()
 
@@ -66,15 +65,15 @@ plt.figure(3)
 plt.plot(x, s_v_y, '-')
 ax = plt.gca()
 ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data) / 4)
+plt.locator_params(nbins=len(data))
 plt.xticks(rotation=70)
 plt.show()
 
-#CONVERTED AND FILTERED
+#ACCELERATION COMPARISON
 plt.figure(4)
-plt.plot(x, acc_z, '-')
+plt.plot(x, acc_z, '-',)
 ax = plt.gca()
 ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data) / 4)
+plt.locator_params(nbins=len(data))
 plt.xticks(rotation=70)
 plt.show()
