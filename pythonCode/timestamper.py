@@ -3,6 +3,7 @@ import time
 from PIL import Image, ImageDraw, ImageFont
 import moviepy.editor as mp
 from moviepy.video.io.bindings import PIL_to_npimage
+import moviepy.video.fx.all as vfx
 import os
 
 #VID_20150616_145757.mp4
@@ -33,12 +34,12 @@ def timestamp_filter(video_frame, t):
 	printtime = make_datetime_string(folder[i]) + datetime.timedelta(seconds=t) #t = time of current frame
 	im = Image.fromarray(video_frame(t))
 	draw = ImageDraw.Draw(im)
-	draw.text((2, 2), str(printtime), font=font)
+	draw.text((2, 2), str(printtime), font=font, fill='white')
 	return PIL_to_npimage(im)
 
 folder = load_folder(IN_PATH)
 for i in range(0, len(folder)):
 	clip = mp.VideoFileClip(IN_PATH+folder[i])
-	clip.resize(0.5)
+	clip = vfx.rotate(clip, angle=90)
 	timestamped_clip = clip.fl(timestamp_filter)
 	timestamped_clip.write_videofile(OUT_PATH + "TIMESTAMPED_" + folder[i], preset="ultrafast")
