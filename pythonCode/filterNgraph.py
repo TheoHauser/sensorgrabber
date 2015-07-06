@@ -34,7 +34,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 	y = np.concatenate((firstvals, y, lastvals))
 	return np.convolve( m[::-1], y, mode='valid')	
 
-data = np.genfromtxt('/home/sam/SensorGrabber/Data/06-25-2015 15:55:38.csv', 
+data = np.genfromtxt('/Users/old-mac/Documents/SensorGrabber/Data/FILE-NAME-HERE.csv', 
 		      dtype=["|S13", int, float, float, float, float, float, float], delimiter=',', 
 		      names=['time', 'sec', 'azi', 'pitch', 'roll', 'accx', 'accy', 'accz'])
 
