@@ -5,6 +5,20 @@ from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
 import datetime
 
+#Identifies azimuth fluctuations between -180 and 180, then smooths
+def filter_noise(userNP):
+	userNP = list(userNP)
+	for x in range(1, len(userNP)):
+		#print str(x) + " " + str(userNP[x])
+		if x is None or x-1 is None:
+			break
+		else:
+			if userNP[x] > (userNP[x-1] + 300):
+				userNP[x] = userNP[x] - 360
+			elif userNP[x] < (userNP[x] - 300):
+				userNP[x] = userNP[x] + 360
+	return userNP
+
 def make_time_array(userNP):
 	x = np.array(userNP)
 	return x[0:len(x):2] #THE LAST NUMBER CHANGES WITH TEST SIZE, FOR A FULL TEST IT'D PROBS BE 4	
@@ -42,13 +56,14 @@ x = data['sec']
 y = data['azi']
 acc_z = data['accz']
 degree_y = np.array(np.degrees(y))
-s_v_y = np.array(savitzky_golay(degree_y, 3, 1))
+new_degree_y = filter_noise(np.array(np.degrees(y)))
+s_v_y = np.array(savitzky_golay(new_degree_y, 3, 1))
 adjusted_acc = np.array(np.sqrt((data['accx']**2) + (data['accy']**2) + (data['accz']**2)))
 time = make_time_array(data['time'])
 
 #RAW DATA
 plt.figure(1)
-plt.plot(x, y, 'o')
+plt.plot(x, degree_y, '-', x, new_degree_y, '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
 plt.locator_params(nbins=len(time))
@@ -56,31 +71,12 @@ plt.yticks(range(-4, 5, 1))
 plt.xticks(rotation=70)
 plt.show()
 
-'''
-#RAW DATA CONVERTED TO -180 to +180
+#ADJUSTED AND FILTERED
 plt.figure(2)
-plt.plot(x,degree_y, '-')
+plt.plot(x, new_degree_y, '-', x, s_v_y, '-', x, degree_y, '-')
 ax = plt.gca()
-ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data))
+ax.set_xticklabels(time)
+plt.locator_params(nbins=len(time))
+plt.yticks(range(-4, 5, 1))
 plt.xticks(rotation=70)
 plt.show()
-
-#CONVERTED AND FILTERED
-plt.figure(3)
-plt.plot(x, s_v_y, '-')
-ax = plt.gca()
-ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data))
-plt.xticks(rotation=70)
-plt.show()
-
-#ACCELERATION COMPARISON
-plt.figure(4)
-plt.plot(x, acc_z, '-',)
-ax = plt.gca()
-ax.set_xticklabels(data['time'])
-plt.locator_params(nbins=len(data))
-plt.xticks(rotation=70)
-plt.show()
-'''
