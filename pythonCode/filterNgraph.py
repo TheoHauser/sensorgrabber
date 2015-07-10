@@ -8,6 +8,14 @@ import datetime
 #Identifies azimuth fluctuations between -180 and 180, then smooths
 def filter_noise(userNP):
 	userNP = list(userNP)
+	x = userNP[0];
+	for x in range(0,len(userNP)):
+		userNP[x] = userNP[x]-x;
+		if userNP[x] > 180:
+			userNP-=360
+		if userNP[x] < -180:
+			userNP+=360
+			
 	for x in range(1, len(userNP)):
 		#print str(x) + " " + str(userNP[x])
 		if x is None or x-1 is None:
@@ -15,7 +23,7 @@ def filter_noise(userNP):
 		else:
 			if userNP[x] > (userNP[x-1] + 300):
 				userNP[x] = userNP[x] - 360
-			elif userNP[x] < (userNP[x] - 300):
+			elif userNP[x] < (userNP[x-1] - 300):
 				userNP[x] = userNP[x] + 360
 	return userNP
 
