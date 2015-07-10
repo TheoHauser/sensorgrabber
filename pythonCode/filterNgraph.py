@@ -5,17 +5,20 @@ from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
 import datetime
 
+def set_zero(userNP):
+	userNP = list(userNP)
+	i = userNP[0];
+	for x in range(0,len(userNP)):
+		userNP[x] = userNP[x]-i;
+		if userNP[x] > 180:
+			userNP[x]-=360
+		if userNP[x] < -180:
+			userNP[x]+=360
+	return userNP
+
 #Identifies azimuth fluctuations between -180 and 180, then smooths
 def filter_noise(userNP):
 	userNP = list(userNP)
-	x = userNP[0];
-	for x in range(0,len(userNP)):
-		userNP[x] = userNP[x]-x;
-		if userNP[x] > 180:
-			userNP-=360
-		if userNP[x] < -180:
-			userNP+=360
-			
 	for x in range(1, len(userNP)):
 		#print str(x) + " " + str(userNP[x])
 		if x is None or x-1 is None:
@@ -23,7 +26,7 @@ def filter_noise(userNP):
 		else:
 			if userNP[x] > (userNP[x-1] + 300):
 				userNP[x] = userNP[x] - 360
-			elif userNP[x] < (userNP[x-1] - 300):
+			elif userNP[x] < (userNP[x] - 300):
 				userNP[x] = userNP[x] + 360
 	return userNP
 
@@ -63,50 +66,61 @@ data = np.genfromtxt('/Users/old-mac/Documents/SensorGrabber/Data/FILE-NAME-HERE
 x = data['sec']
 y = data['azi']
 acc_z = data['accz']
-degree_y = np.array(np.degrees(y))
-new_degree_y = filter_noise(np.array(np.degrees(y)))
+degree_y = set_zero(np.array(np.degrees(y)))
+new_degree_y = filter_noise(degree_y)
 s_v_y = np.array(savitzky_golay(new_degree_y, 3, 1))
-adjusted_acc = np.array(np.sqrt((data['accx']**2) + (data['accy']**2) + (data['accz']**2)))
 time = make_time_array(data['time'])
 
 plt.figure(1)
+plt.title('Raw Data')
 plt.plot(x, y, '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
 plt.locator_params(nbins=len(time))
-plt.yticks(range(-220, 185, 10))
+plt.ylabel('Radians')
 plt.xticks(rotation=70)
+plt.xlabel('Time')
 plt.show()
 
 plt.figure(2)
-plt.plot(x, degree_y, 'o', x, s_v_y, '-')
+plt.title('Adjusted Data')
+plt.plot(x, degree_y, '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
 plt.locator_params(nbins=len(time))
-plt.yticks(range(-220, 185, 10))
+plt.ylabel('Degrees')
 plt.xticks(rotation=70)
+plt.xlabel('Time')
 plt.show()
 
 plt.figure(3)
-plt.plot(x, acc_x, '-')
+plt.title('Filtered Range Data')
+plt.plot(x, new_degree_y, '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
 plt.locator_params(nbins=len(time))
+plt.ylabel('Degrees')
 plt.xticks(rotation=70)
+plt.xlabel('Time')
 plt.show()
 
 plt.figure(4)
-plt.plot(x, acc_y, '-')
+plt.title('Savitsky-Golay Filtered Data')
+plt.plot(x, s_v_y, '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
 plt.locator_params(nbins=len(time))
+plt.ylabel('Degrees')
 plt.xticks(rotation=70)
+plt.xlabel('Time')
 plt.show()
 
 plt.figure(5)
+plt.title('Acceleration on Z axis')
 plt.plot(x, acc_z, '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
-plt.locator_params(nbins=len(time))
+plt.ylabel('Degrees')
 plt.xticks(rotation=70)
+plt.xlabel('Time')
 plt.show()
