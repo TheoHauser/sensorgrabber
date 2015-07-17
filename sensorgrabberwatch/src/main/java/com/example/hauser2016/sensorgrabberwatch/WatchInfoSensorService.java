@@ -17,7 +17,7 @@ import java.util.Calendar;
 /**
  * Created by hauser2016 on 6/9/15.
  */
-public class WatchInfoSensorService extends WearableListenerService implements SensorEventListener {
+public class WatchInfoSensorService extends Service implements SensorEventListener {
 //Prep objects for the sensor and manager.
 private SensorManager sensorManager = null;
 private Sensor sensorAccelerometer = null;
@@ -36,7 +36,7 @@ float orientation1[] = new float[3];
 float[] rotationMatrix = null;
 
 //get time
-SimpleDateFormat time = new SimpleDateFormat("HHmmss");
+SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
 Calendar calTime = Calendar.getInstance();
 long ogTime = calTime.getTimeInMillis();
 
@@ -55,10 +55,10 @@ boolean bothSensorsHaveValues = false;
         //return super.onStartCommand(intent, flags, startId);
     }
 
-    //@Override
-    //public IBinder onBind(Intent intent) {
-    //    return null;
-    //}
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     private void sendBroadcast(){
         Intent intent = new Intent ("orientationValues"); //put the same message as in the filter you used in the activity when registering the receiver
@@ -82,39 +82,44 @@ boolean bothSensorsHaveValues = false;
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-//        //Grab the sensor information from the sensor that is callin this method.
-//        if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-//            mAccelerometerValues = sensorEvent.values;
-//
+//        Grab the sensor information from the sensor that is callin this method.
+       if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            mAccelerometerValues = sensorEvent.values;
+       if(sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+           rotationMatrix = new float[16];
+           SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
+           SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
+           SensorManager.getOrientation(rotationMatrix, orientation);
+       }
 //        if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
 //            mMagneticValues = sensorEvent.values;
 
-        switch (sensorEvent.sensor.getType()) {
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                mMagneticValues = sensorEvent.values;
-            /*case Sensor.TYPE_ROTATION_VECTOR:
+        /*switch (sensorEvent.sensor.getType()) {
+            //case Sensor.TYPE_MAGNETIC_FIELD:
+            //    mMagneticValues = sensorEvent.values;
+            case Sensor.TYPE_ROTATION_VECTOR:
                 rotationMatrix=new float[16];
                 SensorManager.getRotationMatrixFromVector(rotationMatrix, sensorEvent.values);
                 SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
-                SensorManager.getOrientation(rotationMatrix, orientation);*/
+                SensorManager.getOrientation(rotationMatrix, orientation);
             case Sensor.TYPE_ACCELEROMETER:
                 mAccelerometerValues = sensorEvent.values;
 
-        }
+        }*/
 
         currentTime = time.format(calTime.getTime());
 
         //Check to see if both sensors have values.
-        if(mAccelerometerValues != null && rotationMatrix !=null){
+        if(mAccelerometerValues != null && rotationMatrix!=null){
             //Attempt to grab the rotation matrix.
-            boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometerValues, mMagneticValues);
+            //boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometerValues, mMagneticValues);
             //Check to see if we were successful in grabbing the rotation matrix.
             //If we are indeed successful then we will use that info to grab our orientation.
-            if(success){
-                SensorManager.getOrientation(R,orientation);
+            //if(success){
+            //    SensorManager.getOrientation(R,orientation);
                 //currentTime = time.format(calTime.getTime());
                 //seconds = (ogTime - calTime.getTimeInMillis())/1000;
-            }
+            //}
 
             //We have our values, now we should prep the intent that will send them back.
             sendBroadcast();
@@ -123,7 +128,7 @@ boolean bothSensorsHaveValues = false;
             sensorManager.unregisterListener(this);
 
             //let us now stop the service.
-            stopSelf();
+            //stopSelf();
 
 
         }
@@ -139,13 +144,13 @@ boolean bothSensorsHaveValues = false;
         //Register the sensorManager and both the accelerometer and magnetic sensor.
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        //sensorGeoRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        //sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        sensorGeoRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         //Register listeners.
         sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, sensorMagnetic, SensorManager.SENSOR_DELAY_FASTEST);
-        //sensorManager.registerListener(this, sensorGeoRotationVector, SensorManager.SENSOR_DELAY_FASTEST);
+        //sensorManager.registerListener(this, sensorMagnetic, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorGeoRotationVector, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
 

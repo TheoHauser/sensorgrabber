@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.File;
@@ -22,27 +23,25 @@ import java.util.Calendar;
 /**
  * Created by hauser2016 on 6/9/15.
  */
-public class WatchDataStorageService extends WearableListenerService {
+public class WatchDataStorageService extends Service {
     //Where we are going to store the stuff we need.
     WatchActivityData storedActivityData = new WatchActivityData();
-    String nameOfCapture = "Test";
-
     SimpleDateFormat dateTime = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     Calendar calTime = Calendar.getInstance();
-
     String fileName =  dateTime.format(calTime.getTime()) + ".csv";
+    File file = createFile();
+    String nameOfCapture = "Test";
+    private final static String TAG = "WatchDataStorageService";
 
-
-    //public IBinder onBind(Intent intent) {
-    //    return null;
-    //}
 
     @Override
     public void onCreate() {
         //Register our broadcast receiver.
         super.onCreate();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("orientationValues"));
 
+        Log.d(TAG, "service started");
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("orientationValues"));
 
     }
 
@@ -51,8 +50,10 @@ public class WatchDataStorageService extends WearableListenerService {
 
         //TODO:do i change this?
 
+
         return super.onStartCommand(intent, flags, startId);
     }
+
 
     @Override
     public void onDestroy() {
@@ -72,20 +73,27 @@ public class WatchDataStorageService extends WearableListenerService {
 
     }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-    void writeToFile(){
+    public File createFile(){
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File (sdCard, "/sensorGrabber");
+        directory.mkdirs();
+        File file = new File(directory, fileName);
+        return file;
+    }
+
+
+    public void writeToFile(){
         //Create the output file to write to.
         try{
-            //FileOutputStream fOut = openFileOutput(fileName, Context.MODE_APPEND);
             //Commented out the above in an attempt to write somewhere public so i can send the email.
-            File sdCard = Environment.getExternalStorageDirectory();
-            File directory = new File (sdCard.getAbsolutePath() + "/sensorGrabber");
-            directory.mkdirs();
-            File file = new File(directory, fileName);
+            //FileOutputStream fOut = openFileOutput(fileName, Context.MODE_APPEND);
             FileOutputStream fOut = new FileOutputStream(file, true);
             PrintWriter pWriter = new PrintWriter(fOut);
-
-
 
             //Grab size of storedData object.
             int sizeOfStoredData = storedActivityData.returnSize();
@@ -128,6 +136,8 @@ public class WatchDataStorageService extends WearableListenerService {
             String xAccel = args.getString("xAccel");
             String yAccel = args.getString("yAccel");
             String zAccel = args.getString("zAccel");
+
+            Log.i("azi", azimuth);
 
 
             //Temporary storage.
