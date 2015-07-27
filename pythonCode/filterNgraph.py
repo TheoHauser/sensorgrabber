@@ -1,9 +1,12 @@
 from math import factorial
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.dates import DateFormatter, MinuteLocator
 import numpy as np
-import datetime
+import sys
+
+PATH_NAME = "/home/sam/SensorGrabber/Data/"
+#FILE_NAME = "07-06-2015 20:40:32.csv"
+file_name = sys.argv[1]
 
 def set_zero(userNP):
 	userNP = list(userNP)
@@ -32,7 +35,8 @@ def filter_noise(userNP):
 
 def make_time_array(userNP):
 	x = np.array(userNP)
-	return x[0:len(x):2] #THE LAST NUMBER CHANGES WITH TEST SIZE, FOR A FULL TEST IT'D PROBS BE 4	
+	return x[0:len(x):5]
+#THE LAST NUMBER CHANGES WITH TEST SIZE, FOR A FULL TEST IT'D PROBS BE 4	
 
 #Savitzky-Golay Filter
 #http://wiki.scipy.org/Cookbook/SavitzkyGolay
@@ -57,9 +61,14 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
 	firstvals = y[0] - np.abs( y[1:half_window+1][::-1] - y[0] )
 	lastvals = y[-1] + np.abs(y[-half_window-1:-1][::-1] - y[-1])
 	y = np.concatenate((firstvals, y, lastvals))
-	return np.convolve( m[::-1], y, mode='valid')	
+	return np.convolve( m[::-1], y, mode='valid')
 
-data = np.genfromtxt('/Users/old-mac/Documents/SensorGrabber/Data/FILE-NAME-HERE.csv', 
+def write_to_file(arrayOne, arrayTwo):
+	combined_array = np.asarray([[arrayOne], [arrayTwo]])
+	np.savetxt("ass.csv", (arrayOne, arrayTwo), fmt="%s")
+		
+
+data = np.genfromtxt(PATH_NAME + file_name, 
 		      dtype=["|S13", int, float, float, float, float, float, float], delimiter=',', 
 		      names=['time', 'sec', 'azi', 'pitch', 'roll', 'accx', 'accy', 'accz'])
 
@@ -70,6 +79,8 @@ degree_y = set_zero(np.array(np.degrees(y)))
 new_degree_y = filter_noise(degree_y)
 s_v_y = np.array(savitzky_golay(new_degree_y, 3, 1))
 time = make_time_array(data['time'])
+np.savetxt(str(PATH_NAME + "_FILTERED_" + file_name), np.transpose([data['time'], s_v_y]), fmt="%s")
+other_acc = np.array(np.sqrt(np.square(data['accx']) + np.square(data['accy']) + np.square(data['accz'])))
 
 plt.figure(1)
 plt.title('Raw Data')
@@ -91,6 +102,7 @@ plt.locator_params(nbins=len(time))
 plt.ylabel('Degrees')
 plt.xticks(rotation=70)
 plt.xlabel('Time')
+plt.ylim(-200, 200)
 plt.show()
 
 plt.figure(3)
@@ -102,6 +114,7 @@ plt.locator_params(nbins=len(time))
 plt.ylabel('Degrees')
 plt.xticks(rotation=70)
 plt.xlabel('Time')
+plt.ylim(-200, 200)
 plt.show()
 
 plt.figure(4)
@@ -113,14 +126,49 @@ plt.locator_params(nbins=len(time))
 plt.ylabel('Degrees')
 plt.xticks(rotation=70)
 plt.xlabel('Time')
+plt.ylim(-200, 200)
 plt.show()
 
 plt.figure(5)
-plt.title('Acceleration on Z axis')
-plt.plot(x, acc_z, '-')
+plt.title('Acceleration on X axis')
+plt.plot(x, data['accx'], '-')
 ax = plt.gca()
 ax.set_xticklabels(time)
-plt.ylabel('Degrees')
+plt.locator_params(nbins=len(time))
+plt.ylabel('Meters/second^2')
+plt.xticks(rotation=70)
+plt.xlabel('Time')
+plt.show()
+
+plt.figure(6)
+plt.title('Acceleration on Y axis')
+plt.plot(x, data['accy'], '-')
+ax = plt.gca()
+ax.set_xticklabels(time)
+plt.locator_params(nbins=len(time))
+plt.ylabel('Meters/second^2')
+plt.xticks(rotation=70)
+plt.xlabel('Time')
+plt.show()
+
+plt.figure(7)
+plt.title('Acceleration on Z axis')
+plt.plot(x, data['accz'], '-')
+ax = plt.gca()
+ax.set_xticklabels(time)
+plt.locator_params(nbins=len(time))
+plt.ylabel('Meters/second^2')
+plt.xticks(rotation=70)
+plt.xlabel('Time')
+plt.show()
+
+plt.figure(8)
+plt.title('Acceleration on all axes')
+plt.plot(x, other_acc, '-')
+ax = plt.gca()
+ax.set_xticklabels(time)
+plt.locator_params(nbins=len(time))
+plt.ylabel(' ')
 plt.xticks(rotation=70)
 plt.xlabel('Time')
 plt.show()
